@@ -10,11 +10,6 @@ module swarup_e {
   areas = [backend, devops, data,
            frontend, research, side]
 
-  dead {  // unreachable
-    student_projects(2017)
-    student_projects(2018)
-  }
-
   link [go, kubernetes, flink,
         clickhouse, react, pytorch]
 
@@ -25,7 +20,7 @@ module swarup_e {
   export contact
 }`;
 
-const KEYWORDS = new Set(['module', 'dead', 'link', 'fn', 'export']);
+const KEYWORDS = new Set(['module', 'link', 'fn', 'export']);
 const RULES = [
   ['com', /^\/\/.*/],
   ['str', /^"[^"]*"/],
@@ -56,16 +51,6 @@ export function lex(src) {
     }
   });
   return out;
-}
-
-// Byte length of the dead block, measured from the source itself.
-export function deadBytes(src) {
-  const lines = src.split('\n');
-  const start = lines.findIndex((l) => l.trim().startsWith('dead {'));
-  let end = start;
-  while (end < lines.length && lines[end].trim() !== '}') end++;
-  const block = lines.slice(start, end + 1).join('\n') + '\n';
-  return { bytes: new TextEncoder().encode(block).length, startLine: start, endLine: end };
 }
 
 // Highlighted HTML, one span per token (used to write index.html).

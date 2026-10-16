@@ -7,7 +7,7 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&l
 const verb = (v, cls = 'v-ok') => `<span class="${cls}">${v.padStart(10)}</span>  `;
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-export async function runLoader({ ready, deadBytes }) {
+export async function runLoader({ ready }) {
   const root = document.documentElement;
   const el = document.getElementById('loader');
   const log = document.getElementById('loader-log');
@@ -73,14 +73,14 @@ export async function runLoader({ ready, deadBytes }) {
   count.textContent = total;
   add(verb('', 'v-dim') + `<span class="dim">${COMMITS.map(([, n]) => n).join(' + ')} across ${COMMITS.length} repos</span>`);
 
-  // Compiling: one line per area of the tree, then the optimizer removes the dead branch.
-  const areas = TREE.children.filter((a) => !a.dead);
+  // Compiling: one line per area of the tree, then one optimizer pass.
+  const areas = TREE.children;
   for (const [i, a] of areas.entries()) {
     add(verb(i ? '' : 'Compiling', 'v-ok') + `<span style="color: var(--${a.color})">${esc(a.label.toLowerCase())}</span> <span class="dim">(${a.children.length} units)</span>`);
     goal = 52 + (i + 1) / areas.length * 26;
     await pause(110);
   }
-  add(verb('Removing', 'v-warn') + `<span class="t-kw">dead</span> { 2017, 2018 }  <span class="t-num">${deadBytes} B</span>`);
+  add(verb('Optimizing') + 'notebook images  <span class="t-num">16.1 GB -> 8.1 GB</span>');
   goal = 82;
   await pause(220);
 

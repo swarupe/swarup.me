@@ -85,8 +85,6 @@ main { position: relative; z-index: 2; }
 .lbl.area { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--c); padding: 6px 10px; }
 .lbl.root { font: italic 400 22px/1 var(--serif); letter-spacing: 0; padding: 6px 12px 7px; }
 .lbl.root::before { display: none; }
-.lbl.dead { color: var(--com); text-decoration: line-through; text-decoration-color: rgba(255, 93, 93, 0); transition: text-decoration-color .3s; }
-.lbl.dead.struck { text-decoration-color: #ff5d5d; color: #ff8a8a; border-color: rgba(255, 93, 93, 0.6); box-shadow: 0 0 22px -6px #ff5d5d; }
 .lbl.lib { font-weight: 600; }
 
 /* HUD */

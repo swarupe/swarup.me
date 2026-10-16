@@ -1,5 +1,5 @@
 // The 3D layer. One global progress value p in [0, 5] drives every stage:
-// 0 hero, 1 lexer, 2 parser, 3 optimizer, 4 linker, 5 output.
+// 0 hero, 1 lexer, 2 parser, 3 optimizer (the tree compacts), 4 linker, 5 output.
 // Every visual is a pure function of (p, time), so scrubbing backwards just works.
 import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -140,14 +140,6 @@ const FINISH = {
     gl_FragColor = vec4(c, 1.0);
   }`,
 };
-const DISSOLVE_NOISE = /* glsl */`
-float h31(vec3 p){ p = fract(p * 0.3183099 + 0.1); p *= 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
-float vnoise(vec3 x){
-  vec3 i = floor(x); vec3 f = fract(x); f = f * f * (3.0 - 2.0 * f);
-  return mix(mix(mix(h31(i), h31(i + vec3(1,0,0)), f.x), mix(h31(i + vec3(0,1,0)), h31(i + vec3(1,1,0)), f.x), f.y),
-             mix(mix(h31(i + vec3(0,0,1)), h31(i + vec3(1,0,1)), f.x), mix(h31(i + vec3(0,1,1)), h31(i + vec3(1,1,1)), f.x), f.y), f.z);
-}`;
-
 /* ---------- instanced building blocks ---------- */
 class BlockSet {
   constructor(n, { atlas = null, edge = 0.03, fog } = {}) {
@@ -272,7 +264,7 @@ function buildAtlas(strings) {
 }
 
 /* ---------- main ---------- */
-export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
+export async function start({ motion, gsap, ScrollTrigger }) {
   await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 2500))]);
   await document.fonts.load('500 56px "JetBrains Mono"').catch(() => {});
 
@@ -422,25 +414,10 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
   const geoLeaf = new THREE.IcosahedronGeometry(0.2, 1);
 
   function nodeMaterial(c, intensity) {
-    const m = new THREE.MeshPhysicalMaterial({
+    return new THREE.MeshPhysicalMaterial({
       color: c.clone().multiplyScalar(0.35), emissive: c, emissiveIntensity: intensity,
       metalness: 0.35, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.15, transparent: true, flatShading: true,
     });
-    const u = { uDissolve: { value: 0 }, uEdgeColor: { value: col('err').multiplyScalar(4) } };
-    m.userData.u = u;
-    m.onBeforeCompile = (sh) => {
-      Object.assign(sh.uniforms, u);
-      sh.vertexShader = sh.vertexShader
-        .replace('#include <common>', '#include <common>\nvarying vec3 vObj;')
-        .replace('#include <begin_vertex>', '#include <begin_vertex>\nvObj = position;');
-      sh.fragmentShader = sh.fragmentShader
-        .replace('#include <common>', `#include <common>\nvarying vec3 vObj; uniform float uDissolve; uniform vec3 uEdgeColor;\n${DISSOLVE_NOISE}`)
-        .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
-          float dn = vnoise(vObj * 9.0);
-          if (dn < uDissolve) discard;
-          totalEmissiveRadiance += uEdgeColor * (1.0 - smoothstep(0.0, 0.14, dn - uDissolve)) * step(0.001, uDissolve);`);
-    };
-    return m;
   }
 
   function addNode(kind, label, colorKey, pos, parent, extra = {}) {
@@ -456,12 +433,12 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
       mesh.add(shell);
     }
     const el = document.createElement('div');
-    el.className = `lbl ${kind}${extra.dead ? ' dead' : ''}`;
-    el.style.setProperty('--c', extra.dead ? 'var(--com)' : cssVar(colorKey));
+    el.className = `lbl ${kind}`;
+    el.style.setProperty('--c', cssVar(colorKey));
     el.textContent = label;
     labelsEl.appendChild(el);
     const n = {
-      kind, label, color: c, base: pos.clone(), mesh, shell, el, parent, dead: !!extra.dead,
+      kind, label, color: c, base: pos.clone(), mesh, shell, el, parent, glow: mesh.material.emissiveIntensity,
       depth: kind === 'root' ? 0 : kind === 'area' ? 1 : 2, seed: rand() * 6.28, row: extra.row ?? 0,
       world: new THREE.Vector3(), appear: 0, alive: 1,
     };
@@ -477,26 +454,17 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
   TREE.children.forEach((a, ai) => {
     const [r0, r1] = areaRows[ai];
     const ay = (yOf(r0) + yOf(r1)) / 2;
-    const an = addNode('area', a.label, a.color, new THREE.Vector3(L.areaX, ay, 0.6 + bend(L.areaX, ay) * 0.5), rootN, { dead: a.dead, row: r0 });
+    const an = addNode('area', a.label, a.color, new THREE.Vector3(L.areaX, ay, 0.6 + bend(L.areaX, ay) * 0.5), rootN, { row: r0 });
     a.children.forEach((leaf, li) => {
       const ly = yOf(r0 + li);
-      addNode(a.dead ? 'leaf' : 'leaf', leaf, a.color, new THREE.Vector3(L.leafX + Math.sin(ly * 0.7) * 0.25, ly, bend(L.leafX, ly) + (rand() - 0.5) * 0.4), an, { dead: a.dead, row: r0 + li });
+      addNode('leaf', leaf, a.color, new THREE.Vector3(L.leafX + Math.sin(ly * 0.7) * 0.25, ly, bend(L.leafX, ly) + (rand() - 0.5) * 0.4), an, { row: r0 + li });
     });
   });
   const byLabel = new Map(nodes.map((n) => [n.label, n]));
-  const deadNodes = nodes.filter((n) => n.dead);
-  const liveNodes = nodes.filter((n) => !n.dead);
-  const deadDrop = (yOf(areaRows[areaRows.length - 2][1]) - yOf(areaRows[areaRows.length - 1][1])) / 2;
   // appearance order
   nodes.forEach((n) => { n.delay = n.depth === 0 ? 0 : n.depth === 1 ? 0.08 + nodes.indexOf(n) * 0.004 : 0.2 + n.row * 0.011; });
-  // tokens assigned to nodes: dead block tokens feed the dead nodes
-  const deadLineIdx = tokens.filter((t) => tokenEls.length && /dead|student_projects|2017|2018/.test(t.text)).map((t) => t.line);
-  const deadLines = new Set(deadLineIdx);
-  let rr = 0;
-  tokens.forEach((t) => {
-    if (deadLines.has(t.line)) t.node = deadNodes[(t.line + t.text.length) % deadNodes.length];
-    else t.node = liveNodes[rr++ % liveNodes.length];
-  });
+  // tokens assigned to nodes, round robin
+  tokens.forEach((t, i) => { t.node = nodes[i % nodes.length]; });
 
   /* ---------- beams ---------- */
   const libLinks = [];
@@ -507,7 +475,7 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
   /* ---------- libs ---------- */
   const LN = LIBS.length;
   const libSet = new BlockSet(LN, { atlas: atlas.tex, edge: 0.03, fog: fogU }).addTo(treeGroup);
-  const liveTop = yOf(0), liveBot = yOf(areaRows[areaRows.length - 2][1]);
+  const liveTop = yOf(0), liveBot = yOf(areaRows[areaRows.length - 1][1]);
   const libs = LIBS.map(([name, ck, targets], i) => {
     const c = col(ck);
     libSet.setText(i, atlas.uv(name), c);
@@ -520,19 +488,8 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
   });
   // spread docks evenly over the live height, ordered by target height
   [...libs].sort((a, b) => b.tgtY - a.tgtY).forEach((l, k) => {
-    l.dockBase.y = lerp(liveTop + 0.3, liveBot - 0.3, k / (LN - 1)) + deadDrop;
+    l.dockBase.y = lerp(liveTop + 0.3, liveBot - 0.3, k / (LN - 1));
   });
-
-  /* ---------- dead-code particles ---------- */
-  const PN = phone ? 160 : 360;
-  const pPos = new Float32Array(PN * 3);
-  const pSeed = Array.from({ length: PN }, (_, i) => ({ n: deadNodes[i % deadNodes.length], v: new THREE.Vector3(rand() * 2.5 + 0.5, (rand() - 0.3) * 2.5, (rand() - 0.5) * 3) }));
-  const pGeo = new THREE.BufferGeometry();
-  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-  const pMat = new THREE.PointsMaterial({ color: new THREE.Color(PALETTE.err).multiplyScalar(2.2), size: phone ? 0.09 : 0.07, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
-  const burst = new THREE.Points(pGeo, pMat);
-  burst.frustumCulled = false;
-  treeGroup.add(burst);
 
   /* ---------- output: core tiles ---------- */
   const card = document.getElementById('card');
@@ -577,14 +534,13 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
 
   /* ---------- HTML hooks ---------- */
   const editor = document.querySelector('.editor');
-  const bytesEl = document.getElementById('bytes-saved');
   const logEl = document.getElementById('buildlog-text');
   const steps = [...document.querySelectorAll('.hud-steps li')];
   const LOG = [
     'swc swarup.src --release',
     `lex      ${TN} tokens`,
     `parse    ${nodes.length} nodes, ${TREE.children.length} branches`,
-    `opt      1 dead branch removed, ${deadBytes} B saved`,
+    'opt      notebook images 16.1 GB -> 8.1 GB',
     `link     ${LN} libraries resolved`,
     'ok       swarup.bin ready',
     'run      ./swarup.bin',
@@ -605,7 +561,8 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
     cyanL.position.set(12, -5 + Math.cos(t * 0.25) * 3, 7);
 
     /* stage weights */
-    const optK = smooth(2.25, 2.8, p);          // dissolve
+    // optimizer: the tree compacts, everything drawn closer together, then settles
+    const optK = Math.sin(smooth(2.1, 2.95, p) * Math.PI);
     const collapse = easeIO((p - 4.02) / 0.36);  // tree collapses
     const labelFade = 1 - smooth(4.0, 4.14, p);
 
@@ -616,24 +573,19 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
     treeGroup.visible = collapse < 0.985;
     treeGroup.position.set(0, 0, 0);
     treeGroup.updateMatrixWorld();
-    const lift = deadDrop * smooth(2.55, 2.95, p);
+    const squeeze = 1 - 0.16 * optK;
 
     /* nodes */
     for (const n of nodes) {
       const ap = easeBack((p - 1.32 - n.delay) / 0.32);
       n.appear = ap;
-      const kill = n.dead ? optK : 0;
-      n.mesh.position.set(n.base.x, n.base.y + lift + Math.sin(t * 0.8 + n.seed) * 0.06, n.base.z);
+      n.mesh.position.set(n.base.x, n.base.y * squeeze + Math.sin(t * 0.8 + n.seed) * 0.06, n.base.z);
       n.mesh.rotation.set(t * 0.3 + n.seed, t * 0.45 + n.seed, 0);
       const s = Math.max(0.0001, ap * (n.kind === 'root' ? 1 + Math.sin(t * 2) * 0.04 : 1));
       n.mesh.scale.setScalar(s);
-      n.mesh.visible = ap > 0.01 && kill < 0.999;
-      n.mesh.material.userData.u.uDissolve.value = kill;
-      if (n.dead) {
-        const warn = smooth(2.05, 2.2, p) * (1 - kill);
-        n.mesh.material.emissive.copy(n.color).lerp(tmpCol.setHex(PALETTE.err), warn);
-      }
-      if (n.shell) n.shell.material.opacity = 0.55 * (1 - kill);
+      n.mesh.visible = ap > 0.01;
+      // a pulse of extra glow while the optimizer pass runs
+      n.mesh.material.emissiveIntensity = n.glow * (1 + 0.8 * optK);
       n.mesh.getWorldPosition(n.world);
     }
 
@@ -642,24 +594,8 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
       const g = easeIO((p - 1.3 - e.b.delay) / 0.3);
       _a.copy(e.a.mesh.position); _b.copy(e.b.mesh.position);
       _b.lerpVectors(_a, _b, g);
-      const kill = e.b.dead ? optK : 0;
-      const c = e.b.dead ? tmpCol.copy(e.b.color).lerp(_errC, smooth(2.05, 2.2, p)) : e.b.color;
-      beams.set(i, _a, _b, e.b.kind === 'area' ? 0.035 : 0.022, c, g * (1 - kill) * (e.b.dead ? 0.8 : 1), e.b.seed);
+      beams.set(i, _a, _b, e.b.kind === 'area' ? 0.035 : 0.022, e.b.color, g, e.b.seed);
     });
-
-    /* dead-code particles */
-    const pk = smooth(2.28, 2.95, p);
-    const pa = Math.sin(pk * Math.PI);
-    pMat.opacity = pa;
-    burst.visible = pa > 0.01;
-    if (burst.visible) {
-      pSeed.forEach((s, i) => {
-        pPos[i * 3] = s.n.mesh.position.x + s.v.x * pk * 2;
-        pPos[i * 3 + 1] = s.n.mesh.position.y + s.v.y * pk * 2 + pk * pk * 1.5;
-        pPos[i * 3 + 2] = s.n.mesh.position.z + s.v.z * pk * 2;
-      });
-      pGeo.attributes.position.needsUpdate = true;
-    }
 
     /* tokens */
     const heroIn = smooth(0.02, 0.1, p);
@@ -742,7 +678,7 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
       const flash = Math.max(0, 1 - Math.abs(p - lockP) / 0.05);
       const th = l.theta + t * 0.12;
       _a.set(Math.cos(th) * 20, 2 + Math.sin(th) * 6 + l.tilt * 4, Math.sin(th) * 14 - 6);
-      _b.set(l.dockBase.x, l.dockBase.y - deadDrop + lift, l.dockBase.z);
+      _b.set(l.dockBase.x, l.dockBase.y, l.dockBase.z);
       _c.lerpVectors(_a, _b, fly);
       _c.y += Math.sin(fly * Math.PI) * 3;
       const h = 0.5 * (phone ? 1.15 : 1), w = h * l.aspect;
@@ -803,7 +739,6 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
     const lshow = labelFade;
     for (const n of nodes) {
       let o = smooth(0.55, 1, n.appear) * lshow;
-      if (n.dead) o *= 1 - smooth(2.3, 2.6, p);
       // phones: the docked library chips sit over the leaf labels, so dim the leaves while linking
       if (phone && n.kind === 'leaf') o *= 1 - 0.88 * smooth(3.0, 3.35, p);
       if (o < 0.01) { n.el.style.opacity = '0'; continue; }
@@ -816,11 +751,9 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
       else tr = `translate(${x.toFixed(1)}px, ${(y + 26).toFixed(1)}px) translateX(-50%)`;
       n.el.style.transform = tr;
       n.el.style.opacity = o.toFixed(3);
-      if (n.dead) n.el.classList.toggle('struck', p > 2.12);
     }
 
     /* HUD + panels */
-    if (bytesEl && html.classList.contains('fx')) bytesEl.textContent = String(Math.round(deadBytes * smooth(2.25, 2.8, p)));
     // 6 is the runtime section after the 3D stages; main.js flags it on <html>.
     const stage = html.classList.contains('in-run') ? 6 : Math.min(5, Math.floor(p + 0.25));
     if (stage !== lastStage) {
@@ -830,7 +763,6 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
     }
     dustMat.uniforms.uFade.value = 1 - smooth(4.6, 5, p) * 0.5;
   }
-  const _errC = col('err');
 
   /* ---------- resize ---------- */
   function resize() {

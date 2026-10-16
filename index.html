@@ -89,11 +89,6 @@
 <span class="ln">  <span class="tk t-id">areas</span> <span class="tk t-op">=</span> <span class="tk t-pun">[</span><span class="tk t-id">backend</span><span class="tk t-pun">,</span> <span class="tk t-id">devops</span><span class="tk t-pun">,</span> <span class="tk t-id">data</span><span class="tk t-pun">,</span></span>
 <span class="ln">           <span class="tk t-id">frontend</span><span class="tk t-pun">,</span> <span class="tk t-id">research</span><span class="tk t-pun">,</span> <span class="tk t-id">side</span><span class="tk t-pun">]</span></span>
 <span class="ln"></span>
-<span class="ln">  <span class="tk t-kw">dead</span> <span class="tk t-pun">{</span>  <span class="tk t-com">// unreachable</span></span>
-<span class="ln">    <span class="tk t-id">student_projects</span><span class="tk t-pun">(</span><span class="tk t-num">2017</span><span class="tk t-pun">)</span></span>
-<span class="ln">    <span class="tk t-id">student_projects</span><span class="tk t-pun">(</span><span class="tk t-num">2018</span><span class="tk t-pun">)</span></span>
-<span class="ln">  <span class="tk t-pun">}</span></span>
-<span class="ln"></span>
 <span class="ln">  <span class="tk t-kw">link</span> <span class="tk t-pun">[</span><span class="tk t-id">go</span><span class="tk t-pun">,</span> <span class="tk t-id">kubernetes</span><span class="tk t-pun">,</span> <span class="tk t-id">flink</span><span class="tk t-pun">,</span></span>
 <span class="ln">        <span class="tk t-id">clickhouse</span><span class="tk t-pun">,</span> <span class="tk t-id">react</span><span class="tk t-pun">,</span> <span class="tk t-id">pytorch</span><span class="tk t-pun">]</span></span>
 <span class="ln"></span>
@@ -186,14 +181,15 @@
 <section class="stage" id="optimizer" data-stage="3" aria-labelledby="optimizer-title">
   <article class="panel">
     <p class="panel-step t-num">03 &middot; optimizer</p>
-    <h2 id="optimizer-title">Dead code, removed</h2>
-    <p>The branch marked <code class="inline t-kw">dead</code> holds the 2017 and 2018 student projects. Nothing in the current build calls it, so the optimizer drops it. The history stays in git; the binary gets smaller.</p>
+    <h2 id="optimizer-title">Smaller, then faster</h2>
+    <p>Optimization is most of the job: the same system, with less to ship and less to wait for. These are the passes I have run on real systems.</p>
     <div class="meter">
-      <div class="meter-row"><span>bytes saved</span><strong id="bytes-saved">83</strong></div>
-      <div class="meter-row"><span>tree nodes</span><strong id="node-count">30 &rarr; 27</strong></div>
-      <div class="meter-row"><span>branches removed</span><strong>1</strong></div>
+      <div class="meter-row"><span>notebook image, CPU</span><strong data-from="16.1" data-to="8.1" data-unit=" GB">16.1 &rarr; 8.1 GB</strong></div>
+      <div class="meter-row"><span>notebook image, GPU</span><strong data-from="38.9" data-to="26.5" data-unit=" GB">38.9 &rarr; 26.5 GB</strong></div>
+      <div class="meter-row"><span>listings on GraphQL</span><strong>32% faster</strong></div>
+      <div class="meter-row"><span>ClickHouse queries</span><strong>sub-second</strong></div>
     </div>
-    <p class="note">The byte count is the length of the <code class="inline">dead { ... }</code> block in swarup.src, measured in the browser.</p>
+    <p class="note">One multi-kernel image for Python, R, Julia and Scala; listings at EpikInDiFi; analytics over billions of rows.</p>
   </article>
 </section>
 

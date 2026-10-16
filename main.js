@@ -1,6 +1,6 @@
 // Bootstrap. The page is readable HTML first; WebGL and scroll motion are layered on top
 // only when the browser supports them and the reader has not asked for reduced motion.
-import { SOURCE, lex, deadBytes } from './source.js';
+import { SOURCE, lex } from './source.js';
 import { runLoader } from './loader.js';
 import { mountRuntime } from './runtime.js';
 import { mountCursor } from './cursor.js';
@@ -14,8 +14,6 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const counts = {};
 for (const t of lex(SOURCE)) counts[t.type] = (counts[t.type] || 0) + 1;
 for (const dd of document.querySelectorAll('[data-count]')) dd.textContent = counts[dd.dataset.count] || 0;
-const dead = deadBytes(SOURCE);
-document.getElementById('bytes-saved').textContent = dead.bytes;
 
 function webglOK() {
   try {
@@ -37,7 +35,7 @@ async function boot() {
   const gsap = window.gsap;
   const ST = window.ScrollTrigger;
   const motion = !reduced && gsap && ST;
-  await scene.start({ motion, deadBytes: dead.bytes, gsap, ScrollTrigger: ST });
+  await scene.start({ motion, gsap, ScrollTrigger: ST });
 }
 
 // Stage 06 sits after the 3D stages. The scene reads this flag for the HUD and the build log.
@@ -78,7 +76,7 @@ if (root.classList.contains('loading')) {
   window.__loaderStarted = true;
   let seen = false;
   try { seen = sessionStorage.getItem('swc-booted') === '1'; } catch {}
-  const htmlLoader = () => { startScene(); return runLoader({ ready, deadBytes: dead.bytes }); };
+  const htmlLoader = () => { startScene(); return runLoader({ ready }); };
   // ?intro replays the 3D intro even after the first visit
   if ((!seen || location.search.includes('intro')) && webglOK()) {
     // First visit: the 3D workstation. Later visits in the session get the quick terminal.
@@ -87,7 +85,7 @@ if (root.classList.contains('loading')) {
     history.scrollRestoration = 'manual';
     scrollTo(0, 0);
     import('./intro.js')
-      .then(({ runIntro }) => runIntro({ ready, startScene, deadBytes: dead.bytes, onHandoff: handOff }))
+      .then(({ runIntro }) => runIntro({ ready, startScene, onHandoff: handOff }))
       .catch((err) => {
         console.warn('3D intro unavailable, using the terminal loader.', err);
         document.querySelector('.intro')?.remove();

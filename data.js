@@ -9,7 +9,6 @@ export const PALETTE = {
   pun: 0xa39684,
   com: 0x6f6455,
   teal: 0x5fd6c4,
-  err: 0xff5d5d,
 };
 
 // The AST. Areas carry a palette key; leaves are projects.
@@ -22,7 +21,6 @@ export const TREE = {
     { label: 'Frontend', color: 'str', children: ['Parquet previews (DuckDB)', 'Guided-tour Chrome extension', 'Angular, React, Next.js'] },
     { label: 'Research', color: 'kw', children: ['LULC segmentation, 4 papers', 'Learning What to Remember', 'GPT-2 on Mizo'] },
     { label: 'Side projects', color: 'teal', children: ['GuideMesh', 'videopipe', 'agent-skills'] },
-    { label: 'dead', color: 'com', dead: true, children: ['dead code: 2017 student projects', 'dead code: 2018 student projects'] },
   ],
 };
 

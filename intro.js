@@ -25,8 +25,8 @@ T.self = T.enter + 0.15;
 T.probe = T.self + 0.22; T.probeStep = 0.035;
 T.index = T.probe + LIBS.length * T.probeStep + 0.12; T.indexEnd = T.index + 0.6;
 T.compile = T.indexEnd + 0.12; T.compileStep = 0.09;
-T.dead = T.compile + 6 * T.compileStep + 0.08;
-T.link = T.dead + 0.22;
+T.opt = T.compile + 6 * T.compileStep + 0.08;
+T.link = T.opt + 0.22;
 T.hold = T.link + 0.25;
 T.finish = T.hold + 0.12;
 T.run = T.finish + 0.18;
@@ -52,7 +52,7 @@ const INK = '#ffe2b8', INK3 = '#8a6a45', AMBER = '#ffb054';
 const MONO = '"JetBrains Mono", ui-monospace, monospace';
 
 /* ---------- the monitor's screen: a 2D canvas ---------- */
-function makeScreen({ deadBytes, finishedIn }) {
+function makeScreen({ finishedIn }) {
   const canvas = document.createElement('canvas');
   canvas.width = CW; canvas.height = CH;
   const g = canvas.getContext('2d');
@@ -61,7 +61,7 @@ function makeScreen({ deadBytes, finishedIn }) {
   tex.anisotropy = 4;
 
   const total = COMMITS.reduce((a, [, n]) => a + n, 0);
-  const areas = TREE.children.filter((a) => !a.dead);
+  const areas = TREE.children;
   const FS = 22, LH = 33, X0 = 64, VX = 236, TX = 262, TOP = 112;
 
   const txt = (s, x, y, color, size = FS, weight = 400, align = 'left', font = MONO) => {
@@ -152,11 +152,10 @@ function makeScreen({ deadBytes, finishedIn }) {
       const aw = txt(a.label.toLowerCase(), TX, ly, C[a.color]);
       txt(` (${a.children.length} units)`, TX + aw, ly, INK3);
     });
-    if (t < T.dead) return;
-    ly = line(); verb('Removing', ly, C.kw);
-    w = txt('dead', TX, ly, C.kw);
-    w += txt(' { 2017, 2018 }  ', TX + w, ly, INK);
-    txt(`${deadBytes} B`, TX + w, ly, C.num);
+    if (t < T.opt) return;
+    ly = line(); verb('Optimizing', ly);
+    w = txt('notebook images  ', TX, ly, INK);
+    txt('16.1 GB -> 8.1 GB', TX + w, ly, C.num);
     if (t < T.link) return;
     ly = line(); verb('Linking', ly);
     w = txt('three.js 0.169.0, shaders, fonts ', TX, ly, INK);
@@ -330,7 +329,7 @@ const ROWS = [
   [['ctrl', 1.25], ['super', 1.25], ['alt', 1.25], ['space', 6.25], ['ralt', 1.25], ['fn', 1.25], ['menu', 1.25], ['rctrl', 1.25]],
 ];
 
-export async function runIntro({ ready, startScene, onHandoff, deadBytes }) {
+export async function runIntro({ ready, startScene, onHandoff }) {
   const root = document.documentElement;
   const phone = Math.min(innerWidth, innerHeight) < 600;
   const dpr = Math.min(devicePixelRatio || 1, phone ? 1.5 : 2);
@@ -436,7 +435,7 @@ export async function runIntro({ ready, startScene, onHandoff, deadBytes }) {
   monitor.add(ring);
 
   /* screen: a curved glass tube */
-  const screen = makeScreen({ deadBytes, finishedIn: () => (finishedAt / 1000).toFixed(2) });
+  const screen = makeScreen({ finishedIn: () => (finishedAt / 1000).toFixed(2) });
   const sGeo = new THREE.PlaneGeometry(SW, SH, 48, 30);
   const sp = sGeo.attributes.position;
   for (let i = 0; i < sp.count; i++) {
