@@ -277,8 +277,11 @@ export function mount(host, stations) {
     pointer.ndc.set(pointer.x, -pointer.y);
   });
   host.addEventListener('pointerleave', () => { pointer.x = 0; pointer.y = 0; pointer.ndc.set(9, 9); });
-  renderer.domElement.addEventListener('click', () => {
-    raycaster.setFromCamera(pointer.ndc, camera);
+  // Aim at the click itself: a tap on a phone has no pointermove before it.
+  renderer.domElement.addEventListener('click', (e) => {
+    const r = host.getBoundingClientRect();
+    const at = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    raycaster.setFromCamera(at, camera);
     const hit = raycaster.intersectObjects(stationMeshes)[0];
     if (hit) location.hash = hit.object.userData.id;
   });
