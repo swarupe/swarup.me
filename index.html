@@ -18,7 +18,15 @@
   <script>
     try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
   </script>
-  <script src="main.js" defer></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="main.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -148,7 +156,7 @@
           <p class="stack">Kubernetes · Rook-Ceph · MinIO · Docker · NVIDIA GPUs</p>
         </article>
 
-        <article class="card" id="files" data-station data-lines="product data" data-year="2025.4" data-short="Marketplace file service">
+        <article class="card" id="files" data-station data-lines="product data" data-year="2025.4" data-short="File service">
           <p class="card__meta"><span class="pill" data-line="product">Purple</span><span class="pill" data-line="data">Green</span> 2025 · 85 of 105 commits</p>
           <h3>File service for a data marketplace</h3>
           <p>The upload, browse and preview layer for a state data and AI-model marketplace.</p>
@@ -198,7 +206,7 @@
           <p><a class="more" href="https://scholar.google.com/citations?user=Yp5J5mEAAAAJ">Google Scholar profile</a></p>
         </article>
 
-        <article class="card" id="mizo" data-station data-lines="ai" data-year="2026.4" data-short="GPT-2 learns Mizo">
+        <article class="card" id="mizo" data-station data-lines="ai" data-year="2026.4" data-short="GPT-2 on Mizo">
           <p class="card__meta"><span class="pill" data-line="ai">Blue</span> 2026 · IISc</p>
           <h3>Teaching GPT-2 a low-resource language</h3>
           <p>Fine-tuned GPT-2 small on Mizo. Test perplexity fell from 680 to 22.5. A logit-lens heatmap across checkpoints shows which layers pick up the language first.</p>

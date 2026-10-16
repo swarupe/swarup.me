@@ -1,25 +1,9 @@
-// Draws the career map from the page itself: every element with
-// [data-station] becomes a station, so the HTML stays the only source of truth.
+import { LINES, FIRST_YEAR, LAST_YEAR, W, H, AXIS_Y, x, readStations, lineRoute } from './map-data.js';
 
-const LINES = [
-  { key: 'infra', name: 'YELLOW', color: '--yellow' },
-  { key: 'product', name: 'PURPLE', color: '--purple' },
-  { key: 'data', name: 'GREEN', color: '--green' },
-  { key: 'ai', name: 'BLUE', color: '--blue' },
-];
-const FIRST_YEAR = 2019;
-const LAST_YEAR = 2027;
-const W = 1200;
-const LANE_TOP = 135;
-const LANE_GAP = 100;
-const AXIS_Y = LANE_TOP + LANE_GAP * LINES.length - 20;
-const H = AXIS_Y + 30;
-const X0 = 120;
-const X1 = 1080;
 const SVG_NS = 'http://www.w3.org/2000/svg';
-
-const x = (year) => X0 + ((year - FIRST_YEAR) / (LAST_YEAR - FIRST_YEAR)) * (X1 - X0);
-const laneY = (key) => LANE_TOP + LINES.findIndex((l) => l.key === key) * LANE_GAP;
+const host = document.getElementById('map');
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+let scene3d = null;
 
 function el(name, attrs = {}, parent) {
   const node = document.createElementNS(SVG_NS, name);
@@ -28,39 +12,9 @@ function el(name, attrs = {}, parent) {
   return node;
 }
 
-function readStations() {
-  return [...document.querySelectorAll('[data-station]')].map((node) => {
-    const lines = node.dataset.lines.split(/\s+/);
-    const year = Number(node.dataset.year);
-    return {
-      id: node.id,
-      label: node.dataset.short,
-      year,
-      lines,
-      x: x(year),
-      y: lines.reduce((sum, key) => sum + laneY(key), 0) / lines.length,
-    };
-  });
-}
+const toPath = (points) => points.map(([px, py], i) => `${i ? 'L' : 'M'}${px},${py}`).join(' ');
 
-// A line runs along its lane and bends at 45 degrees into interchanges,
-// which sit between the lanes of the lines they join.
-function linePath(lane, stops) {
-  const [first, ...rest] = stops;
-  let d = `M${first.x},${first.y}`;
-  let prev = first;
-  for (const s of rest) {
-    d += ` L${prev.x + Math.abs(prev.y - lane)},${lane}`;
-    d += ` L${s.x - Math.abs(s.y - lane)},${lane}`;
-    d += ` L${s.x},${s.y}`;
-    prev = s;
-  }
-  const last = stops[stops.length - 1];
-  const tail = `M${last.x},${last.y} L${last.x + Math.abs(last.y - lane)},${lane} L${x(LAST_YEAR) - 10},${lane}`;
-  return { d, tail };
-}
-
-function drawMap(host) {
+function drawSvgMap() {
   const stations = readStations();
   const css = getComputedStyle(document.documentElement);
   const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'group', 'aria-label': 'Career map' });
@@ -71,25 +25,47 @@ function drawMap(host) {
   }
 
   for (const line of LINES) {
-    const stops = stations.filter((s) => s.lines.includes(line.key)).sort((a, b) => a.year - b.year);
-    if (!stops.length) continue;
-    const lane = laneY(line.key);
+    const r = lineRoute(line, stations);
+    if (!r) continue;
     const color = css.getPropertyValue(line.color).trim();
-    const { d, tail } = linePath(lane, stops);
-    el('path', { class: 'm-line', d, stroke: color }, svg);
-    el('path', { class: 'm-line m-line--future', d: tail, stroke: color }, svg);
-    const name = el('text', { class: 'm-name', x: 16, y: lane + 5, fill: color }, svg);
-    name.textContent = line.name;
+    el('path', { class: 'm-line', d: toPath(r.route), stroke: color }, svg);
+    el('path', { class: 'm-line m-line--future', d: toPath(r.tail), stroke: color }, svg);
+    el('text', { class: 'm-name', x: 16, y: r.lane + 5, fill: color }, svg).textContent = line.name;
   }
 
-  for (const s of [...stations].sort((a, b) => a.year - b.year)) {
+  for (const s of stations) {
     const a = el('a', { href: `#${s.id}`, class: 'm-station', 'aria-label': `${s.label}, ${Math.floor(s.year)}` }, svg);
     el('circle', { cx: s.x, cy: s.y, r: s.lines.length > 1 ? 12 : 8 }, a);
     const t = el('text', { x: s.x + 10, y: s.y - 16, transform: `rotate(-35 ${s.x + 10} ${s.y - 16})` }, a);
     t.textContent = s.label;
   }
 
+  host.classList.remove('is-3d');
   host.replaceChildren(svg);
+}
+
+function webglAvailable() {
+  try {
+    const c = document.createElement('canvas');
+    return Boolean(c.getContext('webgl2') || c.getContext('webgl'));
+  } catch (e) {
+    return false;
+  }
+}
+
+// The 3D scene is an enhancement. Any failure leaves the SVG map in place.
+async function drawMap() {
+  if (scene3d) return scene3d.refreshTheme();
+  drawSvgMap();
+  if (reducedMotion.matches || !webglAvailable()) return;
+  try {
+    const { mount } = await import('./scene3d.js');
+    scene3d = mount(host, readStations());
+  } catch (err) {
+    console.warn('3D map unavailable, keeping the flat map.', err);
+    scene3d = null;
+    drawSvgMap();
+  }
 }
 
 function setupTheme() {
@@ -101,10 +77,11 @@ function setupTheme() {
       : matchMedia('(prefers-color-scheme: dark)').matches;
     root.dataset.theme = dark ? 'light' : 'dark';
     try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
-    drawMap(document.getElementById('map'));
+    drawMap();
   });
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => drawMap(document.getElementById('map')));
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', drawMap);
 }
 
-drawMap(document.getElementById('map'));
 setupTheme();
+drawMap();
+if (!reducedMotion.matches) import('./fx.js').then((m) => m.start());
