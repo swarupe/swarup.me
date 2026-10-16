@@ -1,237 +1,120 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Swarup E</title>
-  <meta name="description" content="Swarup E, Lead Engineer at the Centre of Data for Public Good, Bengaluru. Backend services, DevOps, streaming pipelines and data platforms.">
-  <meta property="og:title" content="Swarup E">
-  <meta property="og:description" content="Lead Engineer at CDPG, Bengaluru. I build the pipes data flows through.">
-  <meta property="og:url" content="https://swarup.me/">
-  <meta property="og:type" content="website">
-  <meta name="theme-color" content="#07080b">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <script>document.documentElement.classList.add('js');</script>
-  <script type="importmap">
-    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }
-  </script>
-  <script type="module" src="app.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Swarup E</title>
+<meta name="description" content="Swarup E, Lead Engineer at CDPG, Bengaluru. Backend, DevOps, data platforms, front ends and research.">
+<meta name="theme-color" content="#07080a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+} }
+</script>
+<script>
+  // Decide before first paint whether the 3D boot runs. Anything that fails later removes .booting.
+  (function () {
+    var root = document.documentElement;
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var gl = false;
+    try { var c = document.createElement('canvas'); gl = !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) {}
+    if (!reduce && gl) {
+      root.classList.add('booting');
+      window.__bootWatchdog = setTimeout(function () { root.classList.remove('booting'); }, 9000);
+    }
+  })();
+</script>
 </head>
 <body>
-  <a class="skip" href="#main">Skip to content</a>
-  <canvas id="stage" aria-hidden="true"></canvas>
-  <div class="loader" aria-hidden="true"><span class="loader__label">Starting pipeline</span><span class="loader__pct">000%</span></div>
 
-  <header class="bar">
-    <a class="bar__name" href="#top">Swarup&nbsp;E</a>
-    <nav class="bar__nav" aria-label="Sections">
-      <a href="#pipeline">Pipeline</a>
-      <a href="#experience">Experience</a>
-      <a href="#papers">Papers</a>
-      <a href="#contact">Contact</a>
+<div id="boot" aria-hidden="true">
+  <div id="stage"></div>
+  <div class="boot-chrome">
+    <p class="boot-label"><span class="dot"></span><span id="boot-phase">power</span></p>
+    <button id="skip" type="button">Skip boot <kbd>Esc</kbd></button>
+  </div>
+</div>
+
+<div id="desktop">
+  <header class="bar" role="banner">
+    <nav class="ws-nav" aria-label="Workspaces">
+      <button class="ws-btn" data-ws="1" aria-current="true"><b>1</b><span>main</span></button>
+      <button class="ws-btn" data-ws="2"><b>2</b><span>research</span></button>
+      <button class="ws-btn" data-ws="3"><b>3</b><span>stack</span></button>
+      <button class="ws-btn" data-ws="4"><b>4</b><span>mail</span></button>
     </nav>
+    <div class="bar-title" id="bar-title">htop</div>
+    <div class="bar-right">
+      <span class="bar-hint">alt 1-4 <i>workspace</i> alt <span class="arr">&larr;&rarr;&uarr;&darr;</span> <i>focus</i></span>
+      <span class="bar-host">swarup@blr</span>
+      <time class="bar-clock" id="clock">--:--</time>
+    </div>
   </header>
 
-  <main id="main">
-    <section class="hero" id="top" data-state="0">
-      <p class="tag">[ Lead Engineer · Centre of Data for Public Good · Bengaluru ]</p>
-      <h1>Swarup&nbsp;E</h1>
-      <p class="hero__line">I build the pipes <em>data flows through.</em></p>
-      <p class="hero__sub">Backend services, streaming pipelines and data platforms, the Kubernetes clusters under them, and the front ends on top. Since Aug 2025 also on the online M.Tech in Data Science at IISc.</p>
-      <p class="hero__scroll tag">[ Scroll to run the pipeline ]</p>
+  <main class="wsroot">
+    <!-- Workspace 1: main -->
+    <section class="ws is-active" data-ws="1" aria-label="Workspace 1, main">
+      <article class="pane p-htop is-focused" tabindex="0" data-title="htop">
+        <div class="pane-head"><span class="pane-cmd">htop</span><span class="pane-meta">skills as processes</span></div>
+        <div class="pane-body" id="htop"></div>
+      </article>
+      <article class="pane p-log" tabindex="0" data-title="tail -f career.log">
+        <div class="pane-head"><span class="pane-cmd">tail -f ~/career.log</span><span class="pane-meta" id="log-meta">following</span></div>
+        <div class="pane-body" id="log"></div>
+      </article>
+      <article class="pane p-vim" tabindex="0" data-title="nvim bio.md">
+        <div class="pane-head"><span class="pane-cmd">nvim ~/bio.md</span><span class="pane-meta">markdown</span></div>
+        <div class="pane-body vim" id="vim"></div>
+      </article>
+      <article class="pane p-proj" tabindex="0" data-title="ls ~/projects">
+        <div class="pane-head"><span class="pane-cmd">ls -l ~/projects ~/side</span><span class="pane-meta" id="proj-meta"></span></div>
+        <div class="pane-body" id="projects"></div>
+      </article>
     </section>
 
-    <div id="pipeline">
-      <section class="chapter" data-state="1" aria-labelledby="c1">
-        <div class="panel">
-          <p class="tag">[ 01 / 05 · Ingest ]</p>
-          <h2 id="c1">Many sources, <em>one stream.</em></h2>
-          <p>City systems speak a dozen protocols. I wrote most of the framework that pulls them in, reshapes them and streams them into the exchange.</p>
-          <article class="work">
-            <h3>IUDX Adaptor Framework <span>2021 – 2023</span></h3>
-            <p>A configurable ingest pipeline on Apache Flink. RabbitMQ and PostgreSQL sinks, JSONPath and JavaScript transforms, checkpointing, and Prometheus, Grafana and Loki on Kubernetes. Top contributor, 178 of 435 commits.</p>
-          </article>
-          <article class="work">
-            <h3>IUDX Video Server <span>2021</span></h3>
-            <p>Proxies live camera feeds from city servers behind NAT out to the cloud, with load balancing and an API on top.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="chapter" data-state="2" aria-labelledby="c2">
-        <div class="panel">
-          <p class="tag">[ 02 / 05 · Key by, window ]</p>
-          <h2 id="c2">Split by key, <em>cut into windows.</em></h2>
-          <p>Events fan out by key and close in event-time windows. The ones that arrive after the watermark go to a side output instead of being lost.</p>
-          <article class="work">
-            <h3>Streaming rules engine <span>2022 – 2023</span></h3>
-            <p>Apache Calcite SQL evaluated over streams buffered in RocksDB state, with event-time timers, state expiry, and an API to add, test and delete rules while the job runs.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="chapter" data-state="3" aria-labelledby="c3">
-        <div class="panel">
-          <p class="tag">[ 03 / 05 · Store ]</p>
-          <h2 id="c3">Columns, <em>not rows.</em></h2>
-          <p>The stream lands in columnar storage so a question over billions of rows comes back in under a second.</p>
-          <article class="work">
-            <h3>Analytics at volume <span>2023 – now</span></h3>
-            <p>ClickHouse clusters for high-velocity transaction data, fed in real time by Azure Functions and Event Hubs.</p>
-          </article>
-          <article class="work">
-            <h3>Hybrid storage and clusters <span>2023 – now</span></h3>
-            <p>Ceph and MinIO backends and Kubernetes across cloud and on-prem, including GPU nodes for ML workloads.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="chapter" data-state="4" aria-labelledby="c4">
-        <div class="panel">
-          <p class="tag">[ 04 / 05 · Serve ]</p>
-          <h2 id="c4">Out to everyone <em>who needs it.</em></h2>
-          <p>Data is only useful once people can reach it. These are the platforms that hand it out.</p>
-          <article class="work">
-            <h3>IUDX Data Sandbox <span>2022 – 2025</span></h3>
-            <p>Jupyter notebooks next to the exchange's datasets. A Go API with Keycloak auth, build progress streamed over Server-Sent Events, JupyterHub and BinderHub on Kubernetes. 70 of 93 backend commits.</p>
-          </article>
-          <article class="work">
-            <h3>Data marketplace file service <span>2025</span></h3>
-            <p>S3 and MinIO multipart uploads, short-lived presigned URLs, policy checks, and in-browser Parquet previews through DuckDB.</p>
-          </article>
-          <article class="work">
-            <h3>Multi-kernel notebook images <span>2026</span></h3>
-            <p>Python, R, Julia and Scala in one Jupyter image. CPU image cut from 16.1 GB to 8.1 GB, GPU image from 38.9 GB to 26.5 GB.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="chapter" data-state="5" aria-labelledby="c5">
-        <div class="panel">
-          <p class="tag">[ 05 / 05 · Learn ]</p>
-          <h2 id="c5">And sometimes, <em>research.</em></h2>
-          <p>Segmenting land use from satellite imagery at CDPG, and long-video memory and low-resource language models at IISc.</p>
-          <article class="work">
-            <h3>Learning What to Remember <span>2026 · IISc</span></h3>
-            <p>Which frames should a vision-language model keep from a long video before it knows the question? I reproduced the SimpleStream baseline, then reported honestly that the learned memory did not beat it.</p>
-          </article>
-          <article class="work">
-            <h3>GPT-2 on Mizo <span>2026 · IISc</span></h3>
-            <p>Fine-tuned GPT-2 on a low-resource language. Test perplexity fell from 680 to 22.5.</p>
-          </article>
-        </div>
-      </section>
-    </div>
-
-    <section class="plain" id="experience" aria-labelledby="exp-h">
-      <p class="tag">[ Experience ]</p>
-      <h2 id="exp-h">Where I've <em>worked.</em></h2>
-      <ol class="rows">
-        <li>
-          <span class="rows__when">2023 – now</span>
-          <div>
-            <h3>Lead Engineer · Centre of Data for Public Good</h3>
-            <p>Lead a cross-functional team on the core data platform. Kubernetes across cloud and on-prem, ClickHouse at scale, Ceph and MinIO, real-time pipelines on Azure. Architecture reviews and mentoring.</p>
-          </div>
-        </li>
-        <li>
-          <span class="rows__when">2022 – 2023</span>
-          <div>
-            <h3>Senior Software Engineer · CDPG</h3>
-            <p>Backend services in Go, Python and Node.js for analytics workloads, and Flink streaming jobs.</p>
-          </div>
-        </li>
-        <li>
-          <span class="rows__when">2020 – 2022</span>
-          <div>
-            <h3>Software Engineer · CDPG</h3>
-            <p>India Urban Data Exchange: the video server, the data sandbox and the adaptor framework.</p>
-          </div>
-        </li>
-        <li>
-          <span class="rows__when">2019 – 2020</span>
-          <div>
-            <h3>Member of Technical Staff · EpikInDiFi</h3>
-            <p>Moved a lending platform's listings to GraphQL (32% faster), built async vendor integrations over RabbitMQ and Socket.IO, and a 96%-accurate KYC OCR with Tesseract and Detectron2.</p>
-          </div>
-        </li>
-        <li>
-          <span class="rows__when">2019</span>
-          <div>
-            <h3>Software Developer Intern · Latitude Fintech</h3>
-            <p>A Chrome extension that records clicks and turns them into guided product tours.</p>
-          </div>
-        </li>
-        <li>
-          <span class="rows__when">2025 – now</span>
-          <div>
-            <h3>M.Tech (Online), Data Science and Business Analytics · IISc</h3>
-            <p>Alongside full-time work.</p>
-          </div>
-        </li>
-      </ol>
+    <!-- Workspace 2: research -->
+    <section class="ws" data-ws="2" aria-label="Workspace 2, research">
+      <article class="pane p-research" tabindex="0" data-title="cat research.txt">
+        <div class="pane-head"><span class="pane-cmd">cat ~/research.txt</span><span class="pane-meta">papers and coursework</span></div>
+        <div class="pane-body" id="research"></div>
+      </article>
+      <article class="pane p-iisc" tabindex="0" data-title="git log iisc">
+        <div class="pane-head"><span class="pane-cmd">git log --oneline ~/iisc</span><span class="pane-meta">M.Tech since Aug 2025</span></div>
+        <div class="pane-body" id="iisc"></div>
+      </article>
     </section>
 
-    <section class="plain" id="papers" aria-labelledby="pap-h">
-      <p class="tag">[ Papers ]</p>
-      <h2 id="pap-h">Published <em>with my team.</em></h2>
-      <ol class="pubs">
-        <li><a href="https://doi.org/10.1109/InGARSS61818.2024.10984371">An Atmospheric Correction Integrated LULC Segmentation Model for High-Resolution Satellite Imagery</a><span>IEEE InGARSS 2024 · S. Mukherjee et al.</span></li>
-        <li><a href="https://arxiv.org/abs/2408.02382">Cross Pseudo Supervision Framework for Sparsely Labelled Geospatial Images</a><span>arXiv 2024 · Y. Dixit, N. Srivastava, J. D. Joy, R. Olikara, Swarup E, R. Ramesh</span></li>
-        <li><a href="https://arxiv.org/abs/2411.11291">Performance Evaluation of Geospatial Images based on Zarr and Tiff</a><span>arXiv 2024 · J. Khan, Swarup E, R. Ramesh</span></li>
-        <li><a href="https://arxiv.org/abs/2507.18099">Comparison of Segmentation Methods in Remote Sensing for Land Use Land Cover</a><span>arXiv 2025 · N. Srivastava, J. D. Joy, Y. Dixit, Swarup E, R. Ramesh</span></li>
-      </ol>
-      <p><a class="more" href="https://scholar.google.com/citations?user=Yp5J5mEAAAAJ">Google Scholar &rarr;</a></p>
+    <!-- Workspace 3: stack -->
+    <section class="ws" data-ws="3" aria-label="Workspace 3, stack">
+      <article class="pane p-fetch" tabindex="0" data-title="fastfetch">
+        <div class="pane-head"><span class="pane-cmd">fastfetch</span><span class="pane-meta">the full stack</span></div>
+        <div class="pane-body" id="fetch"></div>
+      </article>
+      <article class="pane p-shortlog" tabindex="0" data-title="git shortlog">
+        <div class="pane-head"><span class="pane-cmd">git shortlog -sn --all</span><span class="pane-meta">his share of commits</span></div>
+        <div class="pane-body" id="shortlog"></div>
+      </article>
     </section>
 
-    <section class="plain" id="workshop" aria-labelledby="ws-h">
-      <p class="tag">[ Workshop · private for now ]</p>
-      <h2 id="ws-h">Things I build <em>after hours.</em></h2>
-      <div class="grid3">
-        <article><h3>GuideMesh</h3><p>Record a browser workflow, get a product walkthrough that survives code changes. 37 of 38 steps still found their element 50 commits later.</p></article>
-        <article><h3>videopipe</h3><p>Videos written as code: HTML and GSAP scenes rendered in headless Chrome, with a cloned voice and generated music.</p></article>
-        <article><h3>agent-skills</h3><p>30 skills for Claude Code and Codex, installed by group: design, debugging, evaluation, writing and media.</p></article>
-      </div>
-    </section>
-
-    <section class="plain" id="stack" aria-labelledby="stack-h">
-      <p class="tag">[ Stack ]</p>
-      <h2 id="stack-h" class="sr-only">Stack</h2>
-      <dl class="stack">
-        <div><dt>Languages</dt><dd>Go, Java, TypeScript, Python, SQL</dd></div>
-        <div><dt>Backend</dt><dd>Express, FastAPI, Vert.x, GraphQL, Keycloak</dd></div>
-        <div><dt>Platform</dt><dd>Kubernetes, Docker, Ceph, MinIO, AWS, Azure, JupyterHub, Prometheus, Grafana</dd></div>
-        <div><dt>Streaming &amp; data</dt><dd>Apache Flink, Kafka, RabbitMQ, Event Hubs, ClickHouse, DuckDB, PostgreSQL, MongoDB, Redis</dd></div>
-        <div><dt>Front end</dt><dd>Angular, React, Next.js, ECharts</dd></div>
-      </dl>
-    </section>
-
-    <section class="plain contact" id="contact" aria-labelledby="contact-h">
-      <p class="tag">[ Contact ]</p>
-      <h2 id="contact-h"><a href="mailto:enamakalswarup@gmail.com">enamakalswarup<wbr>@gmail.com</a></h2>
-      <ul class="links">
-        <li><a href="https://github.com/swarupe">GitHub</a></li>
-        <li><a href="https://www.linkedin.com/in/swarupe">LinkedIn</a></li>
-        <li><a href="https://www.instagram.com/swarupe7">Instagram</a></li>
-        <li><a href="https://x.com/swarup_e">X</a></li>
-        <li><a href="https://scholar.google.com/citations?user=Yp5J5mEAAAAJ">Scholar</a></li>
-      </ul>
+    <!-- Workspace 4: mail -->
+    <section class="ws" data-ws="4" aria-label="Workspace 4, mail">
+      <article class="pane p-mail" tabindex="0" data-title="mutt">
+        <div class="pane-head"><span class="pane-cmd">mutt -s hello</span><span class="pane-meta">contact</span></div>
+        <div class="pane-body" id="mail"></div>
+      </article>
+      <article class="pane p-plan" tabindex="0" data-title="cat .plan">
+        <div class="pane-head"><span class="pane-cmd">cat ~/.plan</span><span class="pane-meta">right now</span></div>
+        <div class="pane-body" id="plan"></div>
+      </article>
     </section>
   </main>
+</div>
 
-  <aside class="hud" aria-hidden="true">
-    <span>sim</span>
-    <span>events/s <b data-hud="rate">0</b></span>
-    <span>watermark <b data-hud="wm">--:--:--</b></span>
-    <span>late <b data-hud="late">0.0%</b></span>
-  </aside>
-
-  <footer class="foot">
-    <p>Bengaluru · 12.97°N 77.59°E · hand-written HTML on GitHub Pages, no trackers.</p>
-  </footer>
+<script type="module" src="main.js"></script>
 </body>
 </html>

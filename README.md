@@ -1,6 +1,6 @@
 # swarup.me
 
-Personal site, served by GitHub Pages from the root of `master`. Plain HTML, CSS and JS with no build step.
+Prototype of the "boot" design for swarup.me, kept for reference. The live site is on `master`.
 
 - `index.html` holds all the content. It reads fine with JavaScript off.
 - `scene.js` is the particle pipeline (three.js 0.169.0 from jsDelivr, pinned in the import map). Each particle's position is computed in the vertex shader from its seed, the time and the current chapter (0 to 5).
