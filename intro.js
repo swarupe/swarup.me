@@ -181,7 +181,7 @@ function makeScreen({ deadBytes, finishedIn }) {
     const cropW = aspect < CW / CH ? CH * aspect : CW;
     const cropH = cropW / aspect;
     const ox = (CW - cropW) / 2, oy = (CH - cropH) / 2, u = cropW / vw;
-    h.fillStyle = C.bg; h.fillRect(0, 0, CW, CH);
+    h.fillStyle = getComputedStyle(document.body).backgroundColor; h.fillRect(0, 0, CW, CH);
     const glow = h.createRadialGradient(ox + cropW * 0.78, oy + cropH * 0.18, 0, ox + cropW * 0.78, oy + cropH * 0.18, cropW * 0.8);
     glow.addColorStop(0, 'rgba(255,176,84,0.06)'); glow.addColorStop(1, 'rgba(255,176,84,0)');
     h.fillStyle = glow; h.fillRect(0, 0, CW, CH);

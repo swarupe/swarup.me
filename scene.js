@@ -115,10 +115,10 @@ void main() {
   gl_FragColor = vec4(vColor * a * a * vA, 1.0);
 }`;
 const FINISH = {
-  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uAspect: { value: 1 } },
+  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uAspect: { value: 1 }, uLight: { value: 0 }, uPaper: { value: new THREE.Color(0xf4ece0) } },
   vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
   fragmentShader: /* glsl */`
-  uniform sampler2D tDiffuse; uniform float uTime; uniform float uAspect; varying vec2 vUv;
+  uniform sampler2D tDiffuse; uniform float uTime; uniform float uAspect; uniform float uLight; uniform vec3 uPaper; varying vec2 vUv;
   float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
   void main(){
     vec2 q = vUv - 0.5;
@@ -130,6 +130,13 @@ const FINISH = {
     c.b = texture2D(tDiffuse, vUv - off).b;
     c *= mix(1.0, 0.55, smoothstep(0.35, 1.05, r));
     c += (h(vUv * 900.0 + fract(uTime) * 61.0) - 0.5) * 0.028;
+    // light theme: brightness becomes ink coverage, hue is kept and darkened to read on paper
+    float lum = max(max(c.r, c.g), c.b);
+    vec3 hue = c / max(lum, 1e-3);
+    vec3 ink = hue * 0.52;
+    float cover = smoothstep(0.12, 0.7, lum);
+    vec3 paper = uPaper * (1.0 - 0.05 * smoothstep(0.35, 1.05, r));
+    c = mix(c, mix(paper, ink, cover), uLight);
     gl_FragColor = vec4(c, 1.0);
   }`,
 };
@@ -314,6 +321,10 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
   const finish = new ShaderPass(FINISH);
+  // light theme: bloom halos would print as smudges on paper, so keep them faint
+  const applyTheme = (light) => { finish.uniforms.uLight.value = light ? 1 : 0; bloom.strength = light ? 0.22 : 0.95; };
+  applyTheme(html.dataset.theme === 'light');
+  addEventListener('themechange', (e) => { applyTheme(e.detail.light); if (!motion) { update(4.0, 6.0, 0); render(); } });
   composer.addPass(finish);
 
   /* screen <-> world */
@@ -866,8 +877,9 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
       start: 'top bottom',
       endTrigger: k === 5 ? sec : panel,
       end: k === 5 ? 'top top' : phone ? 'top 78%' : 'top 32%',
-      onUpdate: (self) => { prog[k] = self.progress; },
-      onRefresh: (self) => { prog[k] = self.progress; },
+      // ScrollTrigger can report values outside 0..1, or NaN, while it recalculates on reload
+      onUpdate: (self) => { if (Number.isFinite(self.progress)) prog[k] = clamp01(self.progress); },
+      onRefresh: (self) => { if (Number.isFinite(self.progress)) prog[k] = clamp01(self.progress); },
     });
     if (k !== 5) {
       gsap.from(panel.children, {
@@ -888,6 +900,7 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
     warmed = true;
     const target = prog.reduce((a, b) => a + b, 0);
     p = window.__snap ? target : p + (target - p) * (1 - Math.exp(-dt * 5));
+    p = Number.isFinite(p) ? Math.min(5, Math.max(0, p)) : 0;
     window.__p = p;
     update(p, t, dt);
     render();

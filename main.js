@@ -4,6 +4,7 @@ import { SOURCE, lex, deadBytes } from './source.js';
 import { runLoader } from './loader.js';
 import { mountRuntime } from './runtime.js';
 import { mountCursor } from './cursor.js';
+import { mountTheme } from './theme.js';
 
 window.__frames = 0;
 const root = document.documentElement;
@@ -60,6 +61,7 @@ function watchRun() {
 
 mountRuntime({ still: reduced });
 mountCursor();
+mountTheme();
 watchRun();
 
 // The scene starts when the intro presses Enter, or right away without the intro.
