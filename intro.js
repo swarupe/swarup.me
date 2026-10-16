@@ -1,4 +1,4 @@
-// 3D intro: a dark workstation. The keyboard types `swc swarup.src --release`, the monitor
+// 3D intro: a retro CRT workstation in a dark room. The keyboard types `swc swarup.src --release`, the monitor
 // runs the build, then the camera pushes into the glass. The last frame on the screen is a
 // pixel-mapped copy of the hero, so the hand-off lands on the real page.
 // Every number on the screen comes from data.js or source.js.
@@ -35,7 +35,7 @@ T.pushStart = T.run + 0.05;
 T.pushEnd = T.pushStart + 2.5;
 
 const SW = 1.6, SH = 1.0, CW = 1280, CH = 800;
-const SCREEN_Y = 1.12, SCREEN_Z = 0.05;
+const SCREEN_Y = 1.08, SCREEN_Z = 0.135;
 
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 const seg = (t, a, b) => clamp01((t - a) / (b - a));
@@ -47,7 +47,8 @@ const ease = {
 };
 const hex = (n) => '#' + n.toString(16).padStart(6, '0');
 const C = Object.fromEntries(Object.entries(PALETTE).map(([k, v]) => [k, hex(v)]));
-const INK = '#dfe3ee', INK2 = '#a3abc0', INK3 = '#6b7490';
+// Terminal text in amber phosphor, like the Boot prototype; syntax colours stay for the chips and areas.
+const INK = '#ffe2b8', INK3 = '#8a6a45', AMBER = '#ffb054';
 const MONO = '"JetBrains Mono", ui-monospace, monospace';
 
 /* ---------- the monitor's screen: a 2D canvas ---------- */
@@ -74,7 +75,7 @@ function makeScreen({ deadBytes, finishedIn }) {
     g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
     g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
   };
-  const verb = (v, y, color = C.str) => txt(v, VX, y, color, FS, 700, 'right');
+  const verb = (v, y, color = AMBER) => txt(v, VX, y, color, FS, 700, 'right');
 
   // Lay the library chips out once, wrapped to the terminal width.
   g.font = `500 17px ${MONO}`;
@@ -90,15 +91,15 @@ function makeScreen({ deadBytes, finishedIn }) {
 
   function drawLog(t) {
     const bg = g.createLinearGradient(0, 0, 0, CH);
-    bg.addColorStop(0, '#0a0c13'); bg.addColorStop(1, '#06070b');
+    bg.addColorStop(0, '#0d0906'); bg.addColorStop(1, '#080504');
     g.fillStyle = bg; g.fillRect(0, 0, CW, CH);
     const glow = g.createRadialGradient(CW * 0.85, 0, 0, CW * 0.85, 0, CW * 0.7);
-    glow.addColorStop(0, 'rgba(127,212,255,0.10)'); glow.addColorStop(1, 'rgba(127,212,255,0)');
+    glow.addColorStop(0, 'rgba(255,176,84,0.09)'); glow.addColorStop(1, 'rgba(255,176,84,0)');
     g.fillStyle = glow; g.fillRect(0, 0, CW, CH);
 
     // window bar
     g.fillStyle = 'rgba(255,255,255,0.03)'; g.fillRect(0, 0, CW, 58);
-    g.fillStyle = 'rgba(160,175,215,0.14)'; g.fillRect(0, 58, CW, 1.5);
+    g.fillStyle = 'rgba(255,196,140,0.14)'; g.fillRect(0, 58, CW, 1.5);
     [C.kw, C.num, C.str].forEach((c, i) => { g.fillStyle = c; g.globalAlpha = 0.85; g.beginPath(); g.arc(40 + i * 24, 29, 7, 0, 7); g.fill(); });
     g.globalAlpha = 1;
     txt('swc', 132, 37, INK, 19, 700);
@@ -110,12 +111,12 @@ function makeScreen({ deadBytes, finishedIn }) {
     // the typed command
     const typed = Math.floor(seg(t, T.type, T.type + COMMAND.length * T.typeStep) * COMMAND.length);
     let ly = line();
-    let w = txt('$ ', X0, ly, C.str, FS, 700);
+    let w = txt('$ ', X0, ly, AMBER, FS, 700);
     const shown = COMMAND.slice(0, typed);
     txt(shown, X0 + w, ly, INK, FS);
     g.font = `400 ${FS}px ${MONO}`;
     const caretX = X0 + w + g.measureText(shown).width + 2;
-    if (t < T.enter && Math.floor(t * 2.6) % 2 === 0) { g.fillStyle = C.str; g.fillRect(caretX, ly - 19, 12, 24); }
+    if (t < T.enter && Math.floor(t * 2.6) % 2 === 0) { g.fillStyle = AMBER; g.fillRect(caretX, ly - 19, 12, 24); }
     if (t < T.self) return;
 
     ly = line(); verb('self-test', ly); txt('toolchain ................ ok', TX, ly, INK);
@@ -182,7 +183,7 @@ function makeScreen({ deadBytes, finishedIn }) {
     const ox = (CW - cropW) / 2, oy = (CH - cropH) / 2, u = cropW / vw;
     h.fillStyle = C.bg; h.fillRect(0, 0, CW, CH);
     const glow = h.createRadialGradient(ox + cropW * 0.78, oy + cropH * 0.18, 0, ox + cropW * 0.78, oy + cropH * 0.18, cropW * 0.8);
-    glow.addColorStop(0, 'rgba(127,212,255,0.06)'); glow.addColorStop(1, 'rgba(127,212,255,0)');
+    glow.addColorStop(0, 'rgba(255,176,84,0.06)'); glow.addColorStop(1, 'rgba(255,176,84,0)');
     h.fillStyle = glow; h.fillRect(0, 0, CW, CH);
     h.textBaseline = 'middle';
     const X = (x) => ox + x * u, Y = (y) => oy + y * u;
@@ -221,13 +222,17 @@ function makeScreen({ deadBytes, finishedIn }) {
     };
     const editor = document.querySelector('.editor');
     if (editor) {
-      box(editor, 'rgba(13,15,23,0.9)', 'rgba(160,175,215,0.16)', 14);
-      const bar = editor.querySelector('.editor-bar').getBoundingClientRect();
-      h.fillStyle = 'rgba(160,175,215,0.14)'; h.fillRect(X(bar.left), Y(bar.bottom), bar.width * u, Math.max(1, u));
-      editor.querySelectorAll('.lights i').forEach((i) => box(i, '#262b3a', null, 5));
-      box(editor.querySelector('.editor-tab'), 'rgba(255,255,255,0.05)', null, 5);
+      // every colour comes from the stylesheet, so a theme change reaches this frame too
+      const es = style(editor);
+      box(editor, es.backgroundColor, es.borderTopColor, parseFloat(es.borderTopLeftRadius) || 14);
+      const barEl = editor.querySelector('.editor-bar'), bar = barEl.getBoundingClientRect();
+      h.fillStyle = style(barEl).borderBottomColor; h.fillRect(X(bar.left), Y(bar.bottom), bar.width * u, Math.max(1, u));
+      editor.querySelectorAll('.lights i').forEach((i) => box(i, style(i).backgroundColor, null, 5));
+      const tab = editor.querySelector('.editor-tab');
+      box(tab, style(tab).backgroundColor, null, 5);
       // line numbers are CSS counters, so draw them from the line boxes
-      h.font = `400 ${12.4 * u}px ${MONO}`; h.fillStyle = '#3a4258'; h.textAlign = 'right';
+      const firstLn = editor.querySelector('.code .ln');
+      h.font = `400 ${12.4 * u}px ${MONO}`; h.fillStyle = firstLn ? getComputedStyle(firstLn, '::before').color : C.com; h.textAlign = 'right';
       editor.querySelectorAll('.code .ln').forEach((ln, i) => {
         const r = ln.getBoundingClientRect();
         const pad = parseFloat(style(ln).paddingLeft);
@@ -250,7 +255,7 @@ function makeScreen({ deadBytes, finishedIn }) {
     const key = t < T.power ? 'off' : t >= T.hero + 0.45 ? 'hero' : 'live';
     if (key !== 'live' && key === last) return;
     last = key;
-    if (key === 'off') { g.fillStyle = '#05060a'; g.fillRect(0, 0, CW, CH); }
+    if (key === 'off') { g.fillStyle = '#0b0705'; g.fillRect(0, 0, CW, CH); }
     else {
       if (t < T.hero + 0.45) drawLog(t);
       if (t >= T.hero) {
@@ -265,7 +270,7 @@ function makeScreen({ deadBytes, finishedIn }) {
   return { tex, update, rebuildHero: () => { heroCanvas = null; last = -1; } };
 }
 
-/* ---------- panel shader: power-on line, subpixel mask, glass ---------- */
+/* ---------- CRT shader: barrel curve, power-on line, scanlines, aperture mask ---------- */
 const screenVert = /* glsl */`
   varying vec2 vUv;
   void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
@@ -274,26 +279,44 @@ const screenFrag = /* glsl */`
   precision highp float;
   varying vec2 vUv;
   uniform sampler2D map;
-  uniform float uTime, uPower, uMask, uBright, uGlass;
+  uniform float uTime, uPower, uCurve, uScan, uBright, uGlass;
+  vec2 barrel(vec2 uv, float k) {
+    vec2 c = uv * 2.0 - 1.0;
+    c *= 1.0 + k * vec2(c.y * c.y, c.x * c.x) * 0.16;
+    return c * 0.5 + 0.5;
+  }
   void main() {
-    vec2 uv = vUv;
-    float px = smoothstep(0.0, 0.3, uPower);
-    float py = smoothstep(0.25, 1.0, uPower);
+    vec2 uv = barrel(vUv, uCurve);
+    vec2 edge = smoothstep(vec2(0.0), vec2(0.006), uv) * smoothstep(vec2(0.0), vec2(0.006), 1.0 - uv);
+    float inside = edge.x * edge.y;
+    // power-on: a horizontal line that opens vertically
+    float px = smoothstep(0.0, 0.28, uPower);
+    float py = smoothstep(0.22, 1.0, uPower);
     float cx = abs(uv.x - 0.5) * 2.0, cy = abs(uv.y - 0.5) * 2.0;
     float hy = max(py, 0.006);
     float open = (1.0 - smoothstep(px - 0.02, px, cx)) * (1.0 - smoothstep(hy - 0.01, hy, cy));
     vec2 suv = vec2(uv.x, 0.5 + (uv.y - 0.5) / hy);
-    vec3 col = texture2D(map, suv).rgb;
-    // subpixel stripes, only visible up close
+    float ab = 0.0011 * uCurve;
+    vec3 col;
+    col.r = texture2D(map, suv + vec2(ab, 0.0)).r;
+    col.g = texture2D(map, suv).g;
+    col.b = texture2D(map, suv - vec2(ab, 0.0)).b;
+    // scanlines and aperture mask
+    float s = 0.5 + 0.5 * sin(uv.y * 800.0 * 3.14159265);
+    col *= mix(1.0, 0.7 + 0.3 * s, uScan);
     float m = mod(gl_FragCoord.x, 3.0);
-    vec3 mask = vec3(m < 1.0 ? 1.0 : 0.8, (m >= 1.0 && m < 2.0) ? 1.0 : 0.8, m >= 2.0 ? 1.0 : 0.8);
-    col *= mix(vec3(1.0), mask, uMask * 0.5);
-    col *= 1.0 + 0.02 * uMask * sin(uv.y * 5.0 - uTime * 2.0);
-    float flash = exp(-cy * cy / (hy * hy * 0.25 + 1e-4)) * (1.0 - py) * 1.8 * px;
-    vec3 c = (col * uBright + vec3(0.62, 0.86, 1.0) * flash) * open;
-    // a soft diagonal reflection on the glass
-    float band = smoothstep(0.5, 0.0, abs((vUv.x - vUv.y * 0.6) - 0.05)) * smoothstep(1.0, 0.4, vUv.y);
-    c += vec3(0.05, 0.06, 0.08) * band * uGlass;
+    vec3 mask = vec3(m < 1.0 ? 1.0 : 0.74, (m >= 1.0 && m < 2.0) ? 1.0 : 0.74, m >= 2.0 ? 1.0 : 0.74);
+    col *= mix(vec3(1.0), mask, uScan * 0.55);
+    // phosphor floor, rolling refresh band, flicker
+    col += vec3(0.018, 0.010, 0.004) * uPower * uScan;
+    col *= 1.0 + 0.035 * uScan * sin(uv.y * 6.0 - uTime * 3.0);
+    col *= 1.0 - 0.012 * uScan * sin(uTime * 120.0);
+    float flash = exp(-cy * cy / (hy * hy * 0.25 + 1e-4)) * (1.0 - py) * 1.6 * px;
+    float v = 1.0 - 0.45 * uCurve * pow(clamp(length(vec2(cx, cy)) / 1.41, 0.0, 1.0), 2.6);
+    vec3 c = (col * uBright * v + vec3(1.0, 0.82, 0.62) * flash) * open * inside;
+    // glass: a soft reflection band, present even with the tube off
+    float band = smoothstep(0.55, 0.0, length((vUv - vec2(0.22, 0.86)) * vec2(1.0, 2.2)));
+    c += vec3(0.10, 0.11, 0.13) * band * uGlass;
     gl_FragColor = vec4(c, 1.0);
   }
 `;
@@ -343,95 +366,101 @@ export async function runIntro({ ready, startScene, onHandoff, deadBytes }) {
   scene.environmentIntensity = 0.16;
   const camera = new THREE.PerspectiveCamera(32, innerWidth / innerHeight, 0.02, 60);
 
-  /* materials */
-  const graphite = new THREE.MeshPhysicalMaterial({ color: 0x14161c, roughness: 0.38, metalness: 0.55, clearcoat: 0.5, clearcoatRoughness: 0.3 });
-  const alu = new THREE.MeshStandardMaterial({ color: 0x8d93a0, roughness: 0.28, metalness: 1 });
-  const black = new THREE.MeshStandardMaterial({ color: 0x050608, roughness: 0.6 });
+  /* materials: the beige of an old workstation, accents from the syntax palette */
+  const shell = new THREE.MeshPhysicalMaterial({ color: 0xd6cfc0, roughness: 0.48, clearcoat: 0.35, clearcoatRoughness: 0.4, sheen: 0.3, sheenColor: new THREE.Color(0xfff2dd) });
+  const shellDark = new THREE.MeshPhysicalMaterial({ color: 0x15171d, roughness: 0.35, metalness: 0.2, clearcoat: 0.6 });
+  const rubber = new THREE.MeshStandardMaterial({ color: 0x0c0c0f, roughness: 0.85 });
+  const metal = new THREE.MeshStandardMaterial({ color: 0x8c909a, roughness: 0.25, metalness: 1 });
 
-  /* monitor: slim panel on an aluminium stand */
+  /* monitor: a CRT with a tapered tube housing */
   const monitor = new THREE.Group();
   scene.add(monitor);
-  const HW = SW + 0.07, HH = SH + 0.1;
-  const panel = new THREE.Mesh(new RoundedBoxGeometry(HW, HH + 0.06, 0.07, 6, 0.025), graphite);
-  panel.position.set(0, SCREEN_Y - 0.03, 0);
-  monitor.add(panel);
-  const back = new THREE.Mesh(new RoundedBoxGeometry(HW * 0.8, HH * 0.7, 0.12, 6, 0.05), graphite);
-  back.position.set(0, SCREEN_Y - 0.02, -0.08);
-  monitor.add(back);
-  const bezel = new THREE.Mesh(new THREE.PlaneGeometry(SW + 0.03, SH + 0.03), black);
-  bezel.position.set(0, SCREEN_Y, 0.0365);
+  const HW = SW + 0.36, HH = SH + 0.5;
+  const housing = new THREE.Mesh(new RoundedBoxGeometry(HW, HH, 0.24, 8, 0.09), shell);
+  housing.position.set(0, SCREEN_Y - 0.06, 0);
+  monitor.add(housing);
+  const rearGeo = new RoundedBoxGeometry(HW * 0.94, HH * 0.92, 0.9, 8, 0.16);
+  const rp = rearGeo.attributes.position;
+  for (let i = 0; i < rp.count; i++) {
+    const z = rp.getZ(i);
+    const k = 1 - 0.42 * clamp01((0.45 - z) / 0.9);
+    rp.setX(i, rp.getX(i) * k);
+    rp.setY(i, rp.getY(i) * k + (1 - k) * 0.12);
+  }
+  rearGeo.computeVertexNormals();
+  const rear = new THREE.Mesh(rearGeo, shell);
+  rear.position.set(0, SCREEN_Y - 0.06, -0.5);
+  monitor.add(rear);
+  for (let i = 0; i < 9; i++) {
+    const v = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.012, 0.03), rubber);
+    v.position.set(0, SCREEN_Y + HH * 0.36, -0.42 - i * 0.055);
+    v.rotation.x = -0.12;
+    monitor.add(v);
+  }
+  const bezel = new THREE.Mesh(new RoundedBoxGeometry(SW + 0.1, SH + 0.1, 0.04, 4, 0.03), shellDark);
+  bezel.position.set(0, SCREEN_Y, 0.11);
   monitor.add(bezel);
-  // light strip on the back: washes the wall in the syntax colours
-  const stripCanvas = document.createElement('canvas');
-  stripCanvas.width = 256; stripCanvas.height = 4;
-  const sg = stripCanvas.getContext('2d');
-  const sgr = sg.createLinearGradient(0, 0, 256, 0);
-  ['id', 'op', 'kw', 'num', 'str', 'teal'].forEach((k, i, a) => sgr.addColorStop(i / (a.length - 1), C[k]));
-  sg.fillStyle = sgr; sg.fillRect(0, 0, 256, 4);
-  const stripTex = new THREE.CanvasTexture(stripCanvas);
-  stripTex.colorSpace = THREE.SRGBColorSpace;
-  stripTex.wrapS = THREE.RepeatWrapping;
-  const glowMat = new THREE.MeshBasicMaterial({ map: stripTex, color: new THREE.Color(1, 1, 1).multiplyScalar(0), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
-  const strip = new THREE.Mesh(new THREE.PlaneGeometry(HW * 0.78, 0.018), glowMat);
-  strip.position.set(0, SCREEN_Y + HH * 0.34, -0.145);
-  strip.rotation.y = Math.PI;
-  monitor.add(strip);
-  // chin mark
-  const markCanvas = document.createElement('canvas');
-  markCanvas.width = 256; markCanvas.height = 48;
-  const mg = markCanvas.getContext('2d');
-  mg.font = `600 30px ${MONO}`; mg.fillStyle = '#4a5166'; mg.textAlign = 'center';
-  mg.fillText('swc', 128, 34);
-  const markTex = new THREE.CanvasTexture(markCanvas);
-  markTex.colorSpace = THREE.SRGBColorSpace;
-  const mark = new THREE.Mesh(new THREE.PlaneGeometry(0.16, 0.03), new THREE.MeshBasicMaterial({ map: markTex, transparent: true }));
-  mark.position.set(0, SCREEN_Y - SH / 2 - 0.045, 0.0362);
-  monitor.add(mark);
+  // chin: power LED, two knobs, an engraved badge with a strip of the syntax colours
+  const chinY = SCREEN_Y - SH / 2 - 0.15;
   const ledMat = new THREE.MeshBasicMaterial({ color: 0x0a0d0a });
-  const led = new THREE.Mesh(new THREE.CircleGeometry(0.006, 16), ledMat);
-  led.position.set(HW / 2 - 0.08, SCREEN_Y - SH / 2 - 0.045, 0.0363);
+  const led = new THREE.Mesh(new THREE.SphereGeometry(0.014, 16, 12), ledMat);
+  led.position.set(HW / 2 - 0.2, chinY, 0.122);
   monitor.add(led);
-  // stand: a flat neck and a thin plate
-  const neck = new THREE.Mesh(new RoundedBoxGeometry(0.2, SCREEN_Y - 0.2, 0.05, 4, 0.02), alu);
-  neck.position.set(0, (SCREEN_Y - 0.2) / 2 + 0.02, -0.2);
-  neck.rotation.x = -0.08;
+  [0, 1].forEach((i) => {
+    const knob = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.038, 0.035, 32), metal);
+    knob.rotation.x = Math.PI / 2;
+    knob.position.set(HW / 2 - 0.34 - i * 0.11, chinY, 0.13);
+    monitor.add(knob);
+  });
+  const badgeCanvas = document.createElement('canvas');
+  badgeCanvas.width = 512; badgeCanvas.height = 64;
+  const bg = badgeCanvas.getContext('2d');
+  bg.fillStyle = '#5b5850';
+  bg.font = `700 32px ${MONO}`;
+  bg.fillText('SWC  SE-2019', 4, 42);
+  ['kw', 'num', 'str', 'id', 'op'].forEach((k, i) => { bg.fillStyle = C[k]; bg.fillRect(300 + i * 34, 22, 26, 10); });
+  const badgeTex = new THREE.CanvasTexture(badgeCanvas);
+  badgeTex.colorSpace = THREE.SRGBColorSpace;
+  const badge = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.0625), new THREE.MeshStandardMaterial({ map: badgeTex, transparent: true, roughness: 0.6 }));
+  badge.position.set(-HW / 2 + 0.38, chinY, 0.121);
+  monitor.add(badge);
+  const neck = new THREE.Mesh(new RoundedBoxGeometry(0.34, 0.36, 0.3, 4, 0.05), shell);
+  neck.position.set(0, 0.2, -0.25);
   monitor.add(neck);
-  const plate = new THREE.Mesh(new RoundedBoxGeometry(0.62, 0.02, 0.42, 4, 0.01), alu);
-  plate.position.set(0, 0.01, -0.18);
-  monitor.add(plate);
+  const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.68, 0.07, 72), shell);
+  foot.scale.z = 0.62;
+  foot.position.set(0, 0.035, -0.22);
+  monitor.add(foot);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.645, 0.008, 8, 96), shellDark);
+  ring.rotation.x = Math.PI / 2; ring.scale.y = 0.62; ring.position.set(0, 0.04, -0.22);
+  monitor.add(ring);
 
-  /* screen */
+  /* screen: a curved glass tube */
   const screen = makeScreen({ deadBytes, finishedIn: () => (finishedAt / 1000).toFixed(2) });
+  const sGeo = new THREE.PlaneGeometry(SW, SH, 48, 30);
+  const sp = sGeo.attributes.position;
+  for (let i = 0; i < sp.count; i++) {
+    const x = sp.getX(i) / (SW / 2), y = sp.getY(i) / (SH / 2);
+    sp.setZ(i, 0.035 * (1 - x * x * 0.85) * (1 - y * y * 0.85));
+  }
+  sGeo.computeVertexNormals();
   const uniforms = {
-    map: { value: screen.tex }, uTime: { value: 0 }, uPower: { value: 0 },
-    uMask: { value: 1 }, uBright: { value: 1.35 }, uGlass: { value: 1 },
+    map: { value: screen.tex }, uTime: { value: 0 }, uPower: { value: 0 }, uCurve: { value: 1 },
+    uScan: { value: 1 }, uBright: { value: 1.5 }, uGlass: { value: 1 },
   };
-  const glass = new THREE.Mesh(new THREE.PlaneGeometry(SW, SH), new THREE.ShaderMaterial({ uniforms, vertexShader: screenVert, fragmentShader: screenFrag }));
-  glass.position.set(0, SCREEN_Y, SCREEN_Z - 0.013);
+  const glass = new THREE.Mesh(sGeo, new THREE.ShaderMaterial({ uniforms, vertexShader: screenVert, fragmentShader: screenFrag }));
+  glass.position.set(0, SCREEN_Y, SCREEN_Z);
   monitor.add(glass);
 
-  /* keyboard */
+  /* keyboard: a beige 60% board; the command is typed on it key by key */
   const kb = new THREE.Group();
-  kb.position.set(0, 0, 1.0);
-  kb.rotation.x = 0.06;
+  kb.position.set(0, 0, 1.05);
+  kb.rotation.x = 0.05;
   scene.add(kb);
-  const U = 0.083, KW = 15 * U;
-  const kbCase = new THREE.Mesh(new RoundedBoxGeometry(KW + 0.07, 0.05, 5 * U + 0.07, 4, 0.02), graphite);
-  kbCase.position.y = 0.025;
-  kb.add(kbCase);
-  // underglow: an additive card on the desk that takes the palette gradient
-  const under = new THREE.Mesh(new THREE.PlaneGeometry(KW + 0.5, 5 * U + 0.42), new THREE.MeshBasicMaterial({ map: stripTex, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
-  under.rotation.x = -Math.PI / 2;
-  under.position.y = 0.003;
-  kb.add(under);
-  const underAlpha = (() => {
-    const c = document.createElement('canvas'); c.width = c.height = 64;
-    const x = c.getContext('2d'); const r = x.createRadialGradient(32, 32, 4, 32, 32, 32);
-    r.addColorStop(0, '#fff'); r.addColorStop(1, '#000'); x.fillStyle = r; x.fillRect(0, 0, 64, 64);
-    return new THREE.CanvasTexture(c);
-  })();
-  under.material.alphaMap = underAlpha;
-
+  const U = 0.085, KW = 15 * U;
+  const kbBase = new THREE.Mesh(new RoundedBoxGeometry(KW + 0.16, 0.06, 5 * U + 0.12, 4, 0.025), shell);
+  kbBase.position.y = 0.03;
+  kb.add(kbBase);
   const keyList = [];
   ROWS.forEach((row, r) => {
     let x = -KW / 2;
@@ -442,12 +471,12 @@ export async function runIntro({ ready, startScene, onHandoff, deadBytes }) {
   });
   const keyIndex = new Map(keyList.map((k, i) => [k.label, i]));
   const keyGeo = new RoundedBoxGeometry(1, 1, 1, 2, 0.16);
-  const keyMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.5, clearcoat: 0.25 });
+  const keyMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.55, clearcoat: 0.2 });
   const keys = new THREE.InstancedMesh(keyGeo, keyMat, keyList.length);
-  const base = keyList.map(({ label }) =>
-    new THREE.Color(label === 'esc' ? PALETTE.kw : label === 'enter' ? PALETTE.str : label === 'space' ? 0x262a36 : label.length > 1 ? 0x2a2e3a : 0x1b1e27));
-  const pressCol = new THREE.Color(PALETTE.id).multiplyScalar(3.2);
-  const enterCol = new THREE.Color(PALETTE.str).multiplyScalar(3.4);
+  const base = keyList.map(({ label }) => new THREE.Color(
+    label === 'esc' ? 0xff9a3c : label === 'enter' ? PALETTE.str : label === 'space' ? 0xd8d1c3 : label.length > 1 ? 0x9c968a : 0xd8d1c3));
+  const pressCol = new THREE.Color(0xffb054).multiplyScalar(2.2);
+  const enterCol = new THREE.Color(PALETTE.str).multiplyScalar(3.0);
   kb.add(keys);
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), v3 = new THREE.Vector3(), s3 = new THREE.Vector3(), col = new THREE.Color();
   function layoutKeys(t) {
@@ -455,8 +484,8 @@ export async function runIntro({ ready, startScene, onHandoff, deadBytes }) {
       const age = t - k.press;
       const down = age >= 0 && age < 0.16 ? 1 - age / 0.16 : 0;
       const lit = age >= 0 ? Math.exp(-age * 5) : 0;
-      v3.set(k.x, 0.07 - down * 0.012, k.z);
-      s3.set(k.w * U - 0.012, 0.03, U - 0.012);
+      v3.set(k.x, 0.078 - down * 0.014, k.z);
+      s3.set(k.w * U - 0.01, 0.034, U - 0.01);
       m4.compose(v3, q, s3);
       keys.setMatrixAt(i, m4);
       col.copy(base[i]).lerp(k.label === 'enter' ? enterCol : pressCol, lit);
@@ -466,50 +495,47 @@ export async function runIntro({ ready, startScene, onHandoff, deadBytes }) {
     keys.instanceColor.needsUpdate = true;
   }
   // schedule the key presses for the typed command, then Enter
-  keyList.forEach((k) => { k.times = []; });
   [...COMMAND].forEach((ch, i) => keyList[keyIndex.get(ch === ' ' ? 'space' : ch)].times.push(T.type + i * T.typeStep));
   keyList[keyIndex.get('enter')].times.push(T.enter);
   const pressAt = (k, t) => { let last = -10; for (const at of k.times) if (at <= t) last = at; return last; };
 
-  /* desk, wall */
+  /* room: desk with reflection, back wall */
   if (!phone) {
     const refl = new Reflector(new THREE.PlaneGeometry(14, 10), {
-      clipBias: 0.003, textureWidth: Math.floor(innerWidth * dpr * 0.5), textureHeight: Math.floor(innerHeight * dpr * 0.5), color: 0x4a4d55,
+      clipBias: 0.003, textureWidth: Math.floor(innerWidth * dpr * 0.5), textureHeight: Math.floor(innerHeight * dpr * 0.5), color: 0x5a5a5a,
     });
     refl.rotation.x = -Math.PI / 2;
     refl.position.y = -0.001;
     scene.add(refl);
   }
   const desk = new THREE.Mesh(new THREE.PlaneGeometry(14, 10), new THREE.MeshPhysicalMaterial({
-    color: 0x090a0e, roughness: 0.32, clearcoat: 0.6, clearcoatRoughness: 0.2, transparent: !phone, opacity: phone ? 1 : 0.82,
+    color: 0x0b0c10, roughness: 0.3, clearcoat: 0.5, clearcoatRoughness: 0.25, transparent: !phone, opacity: phone ? 1 : 0.8,
   }));
   desk.rotation.x = -Math.PI / 2;
+  desk.position.y = 0.001;
   scene.add(desk);
-  const wall = new THREE.Mesh(new THREE.PlaneGeometry(20, 10), new THREE.MeshStandardMaterial({ color: 0x111319, roughness: 0.95 }));
-  wall.position.set(0, 4, -2.4);
+  const wall = new THREE.Mesh(new THREE.PlaneGeometry(20, 10), new THREE.MeshStandardMaterial({ color: 0x14151b, roughness: 0.92 }));
+  wall.position.set(0, 4, -3.2);
   scene.add(wall);
 
-  /* lights */
-  const screenLight = new THREE.RectAreaLight(0x9fd6ff, 0, SW, SH);
-  screenLight.position.set(0, SCREEN_Y, SCREEN_Z + 0.03);
+  /* lights: warm amber screen glow, teal rim, an orange wash on the wall */
+  const screenLight = new THREE.RectAreaLight(0xffb36a, 0, SW, SH);
+  screenLight.position.set(0, SCREEN_Y, SCREEN_Z + 0.05);
   screenLight.lookAt(0, SCREEN_Y, 5);
   scene.add(screenLight);
-  const wallPink = new THREE.SpotLight(PALETTE.kw, 0, 7, 0.6, 1, 1.3);
-  wallPink.position.set(-0.4, SCREEN_Y + 0.4, -0.3);
-  wallPink.target.position.set(-1.6, 2.4, -2.4);
-  const wallTeal = new THREE.SpotLight(PALETTE.teal, 0, 7, 0.6, 1, 1.3);
-  wallTeal.position.set(0.4, SCREEN_Y + 0.4, -0.3);
-  wallTeal.target.position.set(1.6, 2.4, -2.4);
-  scene.add(wallPink, wallPink.target, wallTeal, wallTeal.target);
-  const key = new THREE.SpotLight(0xdfe8ff, 12, 16, 0.5, 1, 1.6);
-  key.position.set(-3.2, 4.2, 3.4);
+  const rim = new THREE.SpotLight(PALETTE.teal, 70, 6.4, 0.4, 0.9, 1.6);
+  rim.position.set(3.2, 3.4, -2.6);
+  rim.target.position.set(0, 1.5, -0.5);
+  scene.add(rim, rim.target);
+  const key = new THREE.SpotLight(0xffe9d2, 12, 16, 0.5, 1, 1.6);
+  key.position.set(-3.4, 4.2, 3.4);
   key.target.position.set(0, 0.7, 0);
   scene.add(key, key.target);
-  const rim = new THREE.SpotLight(PALETTE.op, 40, 7, 0.45, 0.9, 1.6);
-  rim.position.set(3.2, 3.2, -1.8);
-  rim.target.position.set(0, 1.2, 0);
-  scene.add(rim, rim.target);
-  scene.add(new THREE.HemisphereLight(0x1b2233, 0x040405, 0.35));
+  const wallWash = new THREE.SpotLight(0xff9a4a, 0, 10, 0.7, 1, 1.4);
+  wallWash.position.set(-1.8, 0.3, -1.2);
+  wallWash.target.position.set(-1.0, 2.2, -3.2);
+  scene.add(wallWash, wallWash.target);
+  scene.add(new THREE.HemisphereLight(0x1d2a33, 0x050404, 0.35));
 
   /* dust in the screen light */
   const dustN = phone ? 140 : 360;
@@ -536,14 +562,14 @@ export async function runIntro({ ready, startScene, onHandoff, deadBytes }) {
         vec4 mv = modelViewMatrix * vec4(p, 1.0);
         gl_Position = projectionMatrix * mv;
         gl_PointSize = (0.9 + fract(seed) * 1.6) * uScale * 0.006 / -mv.z;
-        vA = exp(-abs(p.x) * 0.8) * exp(-abs(p.y - 1.1) * 0.9) * (0.35 + 0.65 * fract(seed * 7.13));
+        vA = exp(-abs(p.x) * 0.8) * exp(-abs(p.y - 1.08) * 0.9) * (0.35 + 0.65 * fract(seed * 7.13));
         vS = fract(seed * 3.7);
       }`,
     fragmentShader: /* glsl */`
       uniform float uGlow; varying float vA; varying float vS;
       void main() {
         float a = smoothstep(0.5, 0.0, length(gl_PointCoord - 0.5)) * vA * uGlow;
-        vec3 c = mix(vec3(0.62, 0.86, 1.0), vec3(1.0, 0.55, 0.75), step(0.8, vS));
+        vec3 c = mix(vec3(1.0, 0.78, 0.5), vec3(1.0, 0.6, 0.4), step(0.8, vS));
         gl_FragColor = vec4(c * a, a);
       }`,
   });
@@ -554,23 +580,23 @@ export async function runIntro({ ready, startScene, onHandoff, deadBytes }) {
   composer.setPixelRatio(dpr);
   composer.setSize(innerWidth, innerHeight);
   composer.addPass(new RenderPass(scene, camera));
-  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.8, 0.55, 0.6);
+  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.75, 0.55, 0.62);
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
 
   /* camera: a slow orbit over the desk, then a push into the glass */
   const look = new THREE.Vector3(0, SCREEN_Y, SCREEN_Z);
-  const startLook = new THREE.Vector3(0.05, 0.78, 0.3);
+  const startLook = new THREE.Vector3(0.05, 0.82, 0);
   const tmpPos = new THREE.Vector3(), tmpLook = new THREE.Vector3();
   function framing() {
     const aspect = innerWidth / innerHeight;
     const portrait = aspect < 1;
     const vt = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-    const d = Math.min((SH / 2) / vt, (SW / 2) / (vt * aspect));
+    const d = Math.min((SH / 2) / vt, (SW / 2) / (vt * aspect)) * 0.99;
     return {
-      a: portrait ? new THREE.Vector3(1.6, 2.3, 8.4) : new THREE.Vector3(2.5, 1.85, 5.0),
-      b: portrait ? new THREE.Vector3(0.7, 1.95, 7.4) : new THREE.Vector3(1.25, 1.5, 3.7),
-      end: new THREE.Vector3(0, SCREEN_Y, glass.position.z + d),
+      a: portrait ? new THREE.Vector3(-1.5, 2.1, 8.6) : new THREE.Vector3(-2.6, 1.75, 5.2),
+      b: portrait ? new THREE.Vector3(-0.9, 1.85, 7.8) : new THREE.Vector3(-1.75, 1.5, 4.6),
+      end: new THREE.Vector3(0, SCREEN_Y, SCREEN_Z + d),
     };
   }
   let frame = framing();
@@ -605,16 +631,16 @@ export async function runIntro({ ready, startScene, onHandoff, deadBytes }) {
     const pw = seg(st, T.power, T.power + 0.55);
     uniforms.uPower.value = pw;
     uniforms.uTime.value = wt;
-    const flat = ease.io3(seg(st, T.pushEnd - 1.0, T.pushEnd));
-    uniforms.uMask.value = 1 - flat;
+    // the tube flattens and loses its scanlines as the camera enters it
+    const flat = ease.io3(seg(st, T.pushEnd - 1.2, T.pushEnd));
+    uniforms.uCurve.value = 1 - flat;
+    glass.scale.z = Math.max(0.001, 1 - flat);
+    uniforms.uScan.value = 1 - flat * 0.9;
     uniforms.uGlass.value = 1 - flat;
-    uniforms.uBright.value = lerp(1.35, 1.0, seg(st, T.hero, T.hero + 0.6));
+    uniforms.uBright.value = lerp(1.5, 1.0, Math.max(flat, seg(st, T.hero, T.hero + 0.6) * 0.6));
     ledMat.color.set(pw > 0 ? PALETTE.str : 0x0a0d0a);
-    screenLight.intensity = 7 * pw;
-    glowMat.color.setScalar(2.2 * pw);
-    wallPink.intensity = wallTeal.intensity = 22 * pw;
-    under.material.opacity = 0.55 * seg(st, T.type - 0.4, T.type + 0.2) * (0.85 + 0.15 * Math.sin(wt * 2));
-    stripTex.offset.x = (wt * 0.05) % 1;
+    screenLight.intensity = 7 * pw * (0.96 + 0.04 * Math.sin(wt * 40));
+    wallWash.intensity = 32 * pw;
     dustMat.uniforms.uGlow.value = pw * (1 - flat);
     dustMat.uniforms.uTime.value = wt;
     bloom.strength = lerp(0.8, 0.1, ease.io3(seg(st, T.pushStart, T.pushEnd - 0.8)));

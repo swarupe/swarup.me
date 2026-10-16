@@ -62,7 +62,8 @@ if (root.classList.contains('loading')) {
   let seen = false;
   try { seen = sessionStorage.getItem('swc-booted') === '1'; } catch {}
   const htmlLoader = () => { startScene(); return runLoader({ ready, deadBytes: dead.bytes }); };
-  if (!seen && webglOK()) {
+  // ?intro replays the 3D intro even after the first visit
+  if ((!seen || location.search.includes('intro')) && webglOK()) {
     // First visit: the 3D workstation. Later visits in the session get the quick terminal.
     try { sessionStorage.setItem('swc-booted', '1'); } catch {}
     document.getElementById('loader').classList.add('intro-wait');

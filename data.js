@@ -1,14 +1,14 @@
-// Syntax palette shared by the 3D scene (CSS mirrors it in styles.css).
+// Palette shared by the 3D scene (CSS mirrors it in styles.css): amber phosphor leads, as in the Boot prototype.
 export const PALETTE = {
-  bg: 0x07080c,
-  kw: 0xff6b9a,
-  id: 0x7fd4ff,
-  str: 0xb8f27c,
-  num: 0xffc66d,
-  op: 0xc792ea,
-  pun: 0x8a93ad,
-  com: 0x5d6884,
-  teal: 0x5eead4,
+  bg: 0x0b0907,
+  kw: 0xff7a5c,
+  id: 0x6fb4ff,
+  str: 0xffb054,
+  num: 0x9be37a,
+  op: 0xb39dff,
+  pun: 0xa39684,
+  com: 0x6f6455,
+  teal: 0x5fd6c4,
   err: 0xff5d5d,
 };
 

@@ -50,7 +50,7 @@ void main() {
   vec3 n = normalize(vN);
   float fres = pow(1.0 - clamp(dot(n, vView), 0.0, 1.0), 2.5);
   float key = 0.55 + 0.45 * dot(n, normalize(vec3(0.35, 0.8, 0.5)));
-  vec3 base = vColor * 0.07 + vec3(0.010, 0.012, 0.020);
+  vec3 base = vColor * 0.07 + vec3(0.020, 0.014, 0.010);
   vec3 c = base * (0.5 + key) + vColor * (fres * 0.55 + eg * 2.2) * vFx.y;
   float fog = 1.0 - exp(-uFogDensity * uFogDensity * vDepth * vDepth);
   c = mix(c, uFog, fog);
@@ -298,10 +298,10 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
   camera.position.set(0, 0, 20);
   const tanHalf = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
 
-  scene.add(new THREE.AmbientLight(0x4a5577, 0.7));
+  scene.add(new THREE.AmbientLight(0x5a4a3c, 0.7));
   const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(6, 10, 12); scene.add(key);
   const pinkL = new THREE.PointLight(PALETTE.kw, 260, 0, 2); scene.add(pinkL);
-  const cyanL = new THREE.PointLight(PALETTE.id, 260, 0, 2); scene.add(cyanL);
+  const cyanL = new THREE.PointLight(PALETTE.str, 260, 0, 2); scene.add(cyanL);
   const coreL = new THREE.PointLight(0xffffff, 0, 0, 2); scene.add(coreL);
 
   /* post */
@@ -528,7 +528,7 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
   const COLS = phone ? 6 : 10, ROWS = phone ? 11 : 8, TL = COLS * ROWS;
   const tiles = new BlockSet(TL, { edge: 0.025, fog: fogU }).addTo(scene);
   const tileCols = ['id', 'kw', 'op', 'num', 'str', 'teal'].map(col);
-  const plateCol = col('str').lerp(col('id'), 0.5);
+  const plateCol = col('str');
   const tileData = Array.from({ length: TL }, (_, i) => {
     const c = i % COLS, r = (i / COLS) | 0;
     const k = (i + 0.5) / TL, phi = Math.acos(1 - 2 * k), th = Math.PI * (1 + Math.sqrt(5)) * i;
