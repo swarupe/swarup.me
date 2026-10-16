@@ -4,281 +4,234 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Swarup E</title>
-  <meta name="description" content="Swarup E, Lead Engineer at the Centre of Data for Public Good, Bengaluru. Full-stack systems engineer: backend services, DevOps, streaming pipelines and data platforms.">
+  <meta name="description" content="Swarup E, Lead Engineer at the Centre of Data for Public Good, Bengaluru. Backend services, DevOps, streaming pipelines and data platforms.">
   <meta property="og:title" content="Swarup E">
-  <meta property="og:description" content="Lead Engineer at CDPG, Bengaluru. Backend, DevOps, streaming pipelines, data platforms.">
+  <meta property="og:description" content="Lead Engineer at CDPG, Bengaluru. I build the pipes data flows through.">
   <meta property="og:url" content="https://swarup.me/">
   <meta property="og:type" content="website">
-  <meta name="theme-color" content="#14102a">
+  <meta name="theme-color" content="#07080b">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800&family=Overpass+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <script>
-    try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
-  </script>
+  <script>document.documentElement.classList.add('js');</script>
   <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
-      }
-    }
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }
   </script>
-  <script type="module" src="main.js"></script>
+  <script type="module" src="app.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
+  <canvas id="stage" aria-hidden="true"></canvas>
+  <div class="loader" aria-hidden="true"><span class="loader__label">Starting pipeline</span><span class="loader__pct">000%</span></div>
 
-  <header class="board" aria-label="Status board">
-    <span class="board__dot" aria-hidden="true"></span>
-    <span class="board__label">Now serving</span>
-    <span class="board__text">Backend · DevOps · Streaming pipelines · Data platforms</span>
-    <button class="theme-toggle" type="button" aria-label="Toggle dark mode"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button>
+  <header class="bar">
+    <a class="bar__name" href="#top">Swarup&nbsp;E</a>
+    <nav class="bar__nav" aria-label="Sections">
+      <a href="#pipeline">Pipeline</a>
+      <a href="#experience">Experience</a>
+      <a href="#papers">Papers</a>
+      <a href="#contact">Contact</a>
+    </nav>
   </header>
 
   <main id="main">
-    <section class="hero">
-      <p class="eyebrow">Full-stack systems engineer · Bengaluru</p>
-      <h1>Swarup E</h1>
-      <p class="lede">Lead Engineer at the <strong>Centre of Data for Public Good</strong>. I build backend services, streaming pipelines and data platforms, run the Kubernetes infrastructure under them, and ship the front ends on top.</p>
-      <p class="lede lede--small">Since Aug 2025, also on the online M.Tech in Data Science and Business Analytics at IISc.</p>
-
-      <ul class="legend" aria-label="Lines">
-        <li><span class="pill" data-line="infra">Yellow</span> Platform &amp; Infra</li>
-        <li><span class="pill" data-line="product">Purple</span> Product &amp; UI</li>
-        <li><span class="pill" data-line="data">Green</span> Streaming &amp; Data</li>
-        <li><span class="pill" data-line="ai">Blue</span> Research</li>
-      </ul>
-
-      <figure class="map" aria-label="Career map: each line is a kind of work, each station a project, placed by year">
-        <div class="map__scroll" id="map" tabindex="0">
-          <noscript><p class="map__fallback">The map needs JavaScript. Every station is listed below.</p></noscript>
-        </div>
-        <figcaption>Each station is a project, placed by year. Interchanges are projects that sit on two lines. Select one to jump to it. <span class="map__hint">Swipe the map sideways.</span></figcaption>
-      </figure>
+    <section class="hero" id="top" data-state="0">
+      <p class="tag">[ Lead Engineer · Centre of Data for Public Good · Bengaluru ]</p>
+      <h1>Swarup&nbsp;E</h1>
+      <p class="hero__line">I build the pipes <em>data flows through.</em></p>
+      <p class="hero__sub">Backend services, streaming pipelines and data platforms, the Kubernetes clusters under them, and the front ends on top. Since Aug 2025 also on the online M.Tech in Data Science at IISc.</p>
+      <p class="hero__scroll tag">[ Scroll to run the pipeline ]</p>
     </section>
 
-    <section id="timeline" aria-labelledby="timeline-h">
-      <h2 id="timeline-h"><span class="num">01</span> Timeline</h2>
-      <ol class="timeline">
-        <li class="stop stop--side">
-          <p class="stop__when">Aug 2025 – now</p>
-          <h3>M.Tech (Online), Data Science and Business Analytics · IISc</h3>
-          <p>At the Indian Institute of Science, alongside full-time work.</p>
+    <div id="pipeline">
+      <section class="chapter" data-state="1" aria-labelledby="c1">
+        <div class="panel">
+          <p class="tag">[ 01 / 05 · Ingest ]</p>
+          <h2 id="c1">Many sources, <em>one stream.</em></h2>
+          <p>City systems speak a dozen protocols. I wrote most of the framework that pulls them in, reshapes them and streams them into the exchange.</p>
+          <article class="work">
+            <h3>IUDX Adaptor Framework <span>2021 – 2023</span></h3>
+            <p>A configurable ingest pipeline on Apache Flink. RabbitMQ and PostgreSQL sinks, JSONPath and JavaScript transforms, checkpointing, and Prometheus, Grafana and Loki on Kubernetes. Top contributor, 178 of 435 commits.</p>
+          </article>
+          <article class="work">
+            <h3>IUDX Video Server <span>2021</span></h3>
+            <p>Proxies live camera feeds from city servers behind NAT out to the cloud, with load balancing and an API on top.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="chapter" data-state="2" aria-labelledby="c2">
+        <div class="panel">
+          <p class="tag">[ 02 / 05 · Key by, window ]</p>
+          <h2 id="c2">Split by key, <em>cut into windows.</em></h2>
+          <p>Events fan out by key and close in event-time windows. The ones that arrive after the watermark go to a side output instead of being lost.</p>
+          <article class="work">
+            <h3>Streaming rules engine <span>2022 – 2023</span></h3>
+            <p>Apache Calcite SQL evaluated over streams buffered in RocksDB state, with event-time timers, state expiry, and an API to add, test and delete rules while the job runs.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="chapter" data-state="3" aria-labelledby="c3">
+        <div class="panel">
+          <p class="tag">[ 03 / 05 · Store ]</p>
+          <h2 id="c3">Columns, <em>not rows.</em></h2>
+          <p>The stream lands in columnar storage so a question over billions of rows comes back in under a second.</p>
+          <article class="work">
+            <h3>Analytics at volume <span>2023 – now</span></h3>
+            <p>ClickHouse clusters for high-velocity transaction data, fed in real time by Azure Functions and Event Hubs.</p>
+          </article>
+          <article class="work">
+            <h3>Hybrid storage and clusters <span>2023 – now</span></h3>
+            <p>Ceph and MinIO backends and Kubernetes across cloud and on-prem, including GPU nodes for ML workloads.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="chapter" data-state="4" aria-labelledby="c4">
+        <div class="panel">
+          <p class="tag">[ 04 / 05 · Serve ]</p>
+          <h2 id="c4">Out to everyone <em>who needs it.</em></h2>
+          <p>Data is only useful once people can reach it. These are the platforms that hand it out.</p>
+          <article class="work">
+            <h3>IUDX Data Sandbox <span>2022 – 2025</span></h3>
+            <p>Jupyter notebooks next to the exchange's datasets. A Go API with Keycloak auth, build progress streamed over Server-Sent Events, JupyterHub and BinderHub on Kubernetes. 70 of 93 backend commits.</p>
+          </article>
+          <article class="work">
+            <h3>Data marketplace file service <span>2025</span></h3>
+            <p>S3 and MinIO multipart uploads, short-lived presigned URLs, policy checks, and in-browser Parquet previews through DuckDB.</p>
+          </article>
+          <article class="work">
+            <h3>Multi-kernel notebook images <span>2026</span></h3>
+            <p>Python, R, Julia and Scala in one Jupyter image. CPU image cut from 16.1 GB to 8.1 GB, GPU image from 38.9 GB to 26.5 GB.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="chapter" data-state="5" aria-labelledby="c5">
+        <div class="panel">
+          <p class="tag">[ 05 / 05 · Learn ]</p>
+          <h2 id="c5">And sometimes, <em>research.</em></h2>
+          <p>Segmenting land use from satellite imagery at CDPG, and long-video memory and low-resource language models at IISc.</p>
+          <article class="work">
+            <h3>Learning What to Remember <span>2026 · IISc</span></h3>
+            <p>Which frames should a vision-language model keep from a long video before it knows the question? I reproduced the SimpleStream baseline, then reported honestly that the learned memory did not beat it.</p>
+          </article>
+          <article class="work">
+            <h3>GPT-2 on Mizo <span>2026 · IISc</span></h3>
+            <p>Fine-tuned GPT-2 on a low-resource language. Test perplexity fell from 680 to 22.5.</p>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <section class="plain" id="experience" aria-labelledby="exp-h">
+      <p class="tag">[ Experience ]</p>
+      <h2 id="exp-h">Where I've <em>worked.</em></h2>
+      <ol class="rows">
+        <li>
+          <span class="rows__when">2023 – now</span>
+          <div>
+            <h3>Lead Engineer · Centre of Data for Public Good</h3>
+            <p>Lead a cross-functional team on the core data platform. Kubernetes across cloud and on-prem, ClickHouse at scale, Ceph and MinIO, real-time pipelines on Azure. Architecture reviews and mentoring.</p>
+          </div>
         </li>
-        <li class="stop stop--now">
-          <p class="stop__when">Apr 2023 – now</p>
-          <h3>Lead Engineer · Centre of Data for Public Good</h3>
-          <p>I lead a cross-functional team on the core data platform services. I run Kubernetes across cloud and on-prem clusters, ClickHouse clusters that query billions of rows, Ceph and MinIO storage, and real-time pipelines on Azure Functions and Event Hubs. I review architecture decisions and mentor the engineers who join.</p>
+        <li>
+          <span class="rows__when">2022 – 2023</span>
+          <div>
+            <h3>Senior Software Engineer · CDPG</h3>
+            <p>Backend services in Go, Python and Node.js for analytics workloads, and Flink streaming jobs.</p>
+          </div>
         </li>
-        <li class="stop">
-          <p class="stop__when">Apr 2022 – Apr 2023</p>
-          <h3>Senior Software Engineer · CDPG</h3>
-          <p>Backend services in Go, Python and Node.js for analytics workloads, Flink streaming jobs, and React front ends wired to them.</p>
+        <li>
+          <span class="rows__when">2020 – 2022</span>
+          <div>
+            <h3>Software Engineer · CDPG</h3>
+            <p>India Urban Data Exchange: the video server, the data sandbox and the adaptor framework.</p>
+          </div>
         </li>
-        <li class="stop">
-          <p class="stop__when">Dec 2020 – Apr 2022</p>
-          <h3>Software Engineer · CDPG</h3>
-          <p>Joined the India Urban Data Exchange (IUDX) team. Built the video server, the data sandbox, and most of the adaptor framework.</p>
+        <li>
+          <span class="rows__when">2019 – 2020</span>
+          <div>
+            <h3>Member of Technical Staff · EpikInDiFi</h3>
+            <p>Moved a lending platform's listings to GraphQL (32% faster), built async vendor integrations over RabbitMQ and Socket.IO, and a 96%-accurate KYC OCR with Tesseract and Detectron2.</p>
+          </div>
         </li>
-        <li class="stop">
-          <p class="stop__when">Jul 2019 – Dec 2020</p>
-          <h3>Member of Technical Staff · EpikInDiFi</h3>
-          <ul>
-            <li id="graphql" data-station data-lines="product" data-year="2019.9" data-short="Threaded views + GraphQL">Moved the lending platform's listing pages to a threaded view backed by GraphQL. Page performance improved by 32%.</li>
-            <li id="microflow" data-station data-lines="data" data-year="2020.2" data-short="Async Microflow">Built Async Microflow, which calls external vendor APIs in sync or async mode over RabbitMQ and Socket.IO.</li>
-            <li id="kyc" data-station data-lines="ai" data-year="2020.5" data-short="Video KYC OCR">Built the PAN card OCR for a video KYC product: Tesseract plus a Detectron2 detector, 96% accuracy.</li>
-            <li>Built the product's global search on MongoDB text indexes.</li>
-          </ul>
+        <li>
+          <span class="rows__when">2019</span>
+          <div>
+            <h3>Software Developer Intern · Latitude Fintech</h3>
+            <p>A Chrome extension that records clicks and turns them into guided product tours.</p>
+          </div>
         </li>
-        <li class="stop">
-          <p class="stop__when">Feb 2019 – Jun 2019</p>
-          <h3>Software Developer Intern · Latitude Fintech</h3>
-          <ul>
-            <li id="recorder" data-station data-lines="product" data-year="2019.2" data-short="Walkthrough recorder">Built a Chrome extension that records clicks and turns them into guided product tours, so customers learned new features without a training call.</li>
-          </ul>
-        </li>
-        <li class="stop stop--side">
-          <p class="stop__when">2015 – 2019</p>
-          <h3>B.E. Computer Science · City Engineering College, VTU</h3>
+        <li>
+          <span class="rows__when">2025 – now</span>
+          <div>
+            <h3>M.Tech (Online), Data Science and Business Analytics · IISc</h3>
+            <p>Alongside full-time work.</p>
+          </div>
         </li>
       </ol>
     </section>
 
-    <section id="work" aria-labelledby="work-h">
-      <h2 id="work-h"><span class="num">02</span> Selected work</h2>
-      <div class="cards">
-        <article class="card" id="adaptor" data-station data-lines="data" data-year="2021.8" data-short="Adaptor Framework">
-          <p class="card__meta"><span class="pill" data-line="data">Green</span> 2021 – 2023 · 178 of 435 commits</p>
-          <h3>IUDX Adaptor Framework</h3>
-          <p>A configurable pipeline that pulls data from city systems, transforms it, and streams it into the exchange. Runs on Apache Flink. I am its top contributor.</p>
-          <ul>
-            <li>Wrote the rules engine: Apache Calcite SQL over streams buffered in RocksDB state, with event-time timers and state expiry.</li>
-            <li>Added RabbitMQ and PostgreSQL sinks, JSONPath and JavaScript transforms, and checkpointing.</li>
-            <li>Benchmarked JS engines and HTTP clients, then moved to the faster ones.</li>
-            <li>Deployed it on Kubernetes with Prometheus, Grafana and Loki for metrics and logs.</li>
-          </ul>
-          <p class="stack">Java · Flink · Calcite · RocksDB · Vert.x · RabbitMQ · PostgreSQL · Kubernetes</p>
-        </article>
+    <section class="plain" id="papers" aria-labelledby="pap-h">
+      <p class="tag">[ Papers ]</p>
+      <h2 id="pap-h">Published <em>with my team.</em></h2>
+      <ol class="pubs">
+        <li><a href="https://doi.org/10.1109/InGARSS61818.2024.10984371">An Atmospheric Correction Integrated LULC Segmentation Model for High-Resolution Satellite Imagery</a><span>IEEE InGARSS 2024 · S. Mukherjee et al.</span></li>
+        <li><a href="https://arxiv.org/abs/2408.02382">Cross Pseudo Supervision Framework for Sparsely Labelled Geospatial Images</a><span>arXiv 2024 · Y. Dixit, N. Srivastava, J. D. Joy, R. Olikara, Swarup E, R. Ramesh</span></li>
+        <li><a href="https://arxiv.org/abs/2411.11291">Performance Evaluation of Geospatial Images based on Zarr and Tiff</a><span>arXiv 2024 · J. Khan, Swarup E, R. Ramesh</span></li>
+        <li><a href="https://arxiv.org/abs/2507.18099">Comparison of Segmentation Methods in Remote Sensing for Land Use Land Cover</a><span>arXiv 2025 · N. Srivastava, J. D. Joy, Y. Dixit, Swarup E, R. Ramesh</span></li>
+      </ol>
+      <p><a class="more" href="https://scholar.google.com/citations?user=Yp5J5mEAAAAJ">Google Scholar &rarr;</a></p>
+    </section>
 
-        <article class="card" id="video-server" data-station data-lines="infra" data-year="2021.2" data-short="Video server">
-          <p class="card__meta"><span class="pill" data-line="infra">Yellow</span> 2021</p>
-          <h3>IUDX Video Server</h3>
-          <p>Proxies live camera feeds from city servers that sit behind NAT out to a cloud server, with load balancing and an API on top.</p>
-        </article>
-
-        <article class="card" id="sandbox" data-station data-lines="infra product" data-year="2022.2" data-short="Data Sandbox">
-          <p class="card__meta"><span class="pill" data-line="infra">Yellow</span><span class="pill" data-line="product">Purple</span> 2022 – 2025 · 70 of 93 backend commits</p>
-          <h3>IUDX Data Sandbox</h3>
-          <p>Users build and launch Jupyter notebooks next to the exchange's datasets, without installing anything.</p>
-          <ul>
-            <li>Wrote the Go API that builds, starts, stops and deletes notebooks, with Keycloak JWT auth.</li>
-            <li>Streamed build progress to the browser over Server-Sent Events.</li>
-            <li>Ran JupyterHub, BinderHub and a private registry on Kubernetes.</li>
-            <li>Built the Angular login and build-status flow.</li>
-          </ul>
-          <p class="stack">Go · PostgreSQL · JupyterHub · BinderHub · Angular · Kubernetes</p>
-        </article>
-
-        <article class="card" id="scale" data-station data-lines="data" data-year="2023.6" data-short="ClickHouse + Event Hubs">
-          <p class="card__meta"><span class="pill" data-line="data">Green</span> 2023 – now</p>
-          <h3>Analytics at volume</h3>
-          <p>ClickHouse clusters that hold billions of rows of transaction data and answer in under a second. Real-time ingest runs on Azure Functions and Event Hubs.</p>
-          <p class="stack">ClickHouse · Azure Event Hubs · Azure Functions · Python</p>
-        </article>
-
-        <article class="card" id="storage" data-station data-lines="infra" data-year="2024.1" data-short="Ceph + Kubernetes">
-          <p class="card__meta"><span class="pill" data-line="infra">Yellow</span> 2023 – now</p>
-          <h3>Hybrid storage and clusters</h3>
-          <p>Ceph and MinIO storage backends and Kubernetes clusters across cloud and on-prem, including GPU nodes for ML workloads.</p>
-          <p class="stack">Kubernetes · Rook-Ceph · MinIO · Docker · NVIDIA GPUs</p>
-        </article>
-
-        <article class="card" id="files" data-station data-lines="product data" data-year="2025.4" data-short="File service">
-          <p class="card__meta"><span class="pill" data-line="product">Purple</span><span class="pill" data-line="data">Green</span> 2025 · 85 of 105 commits</p>
-          <h3>File service for a data marketplace</h3>
-          <p>The upload, browse and preview layer for a state data and AI-model marketplace.</p>
-          <ul>
-            <li>S3 and MinIO multipart uploads with cancel, short-lived presigned URLs, and audit logs.</li>
-            <li>Access checks against Keycloak roles and per-collection policies.</li>
-            <li>In-browser previews of CSV, JSON and Parquet through DuckDB.</li>
-            <li>A Redis job queue with a Python worker for bulk ZIP jobs.</li>
-          </ul>
-          <p class="stack">TypeScript · Express · AWS S3 · MinIO · DuckDB · Redis · Angular</p>
-        </article>
-
-        <article class="card" id="kernels" data-station data-lines="infra" data-year="2026.5" data-short="Multi-kernel images">
-          <p class="card__meta"><span class="pill" data-line="infra">Yellow</span> 2026</p>
-          <h3>Multi-kernel notebook images</h3>
-          <p>Jupyter images with Python, R, Julia and Scala kernels, built per tenant. A shared base image cut the CPU image from 16.1 GB to 8.1 GB and the GPU image from 38.9 GB to 26.5 GB.</p>
-          <p class="stack">Docker · CUDA · conda · Julia · R</p>
-        </article>
+    <section class="plain" id="workshop" aria-labelledby="ws-h">
+      <p class="tag">[ Workshop · private for now ]</p>
+      <h2 id="ws-h">Things I build <em>after hours.</em></h2>
+      <div class="grid3">
+        <article><h3>GuideMesh</h3><p>Record a browser workflow, get a product walkthrough that survives code changes. 37 of 38 steps still found their element 50 commits later.</p></article>
+        <article><h3>videopipe</h3><p>Videos written as code: HTML and GSAP scenes rendered in headless Chrome, with a cloned voice and generated music.</p></article>
+        <article><h3>agent-skills</h3><p>30 skills for Claude Code and Codex, installed by group: design, debugging, evaluation, writing and media.</p></article>
       </div>
     </section>
 
-    <section id="research" aria-labelledby="research-h">
-      <h2 id="research-h"><span class="num">03</span> Research <small>papers from CDPG and IISc coursework</small></h2>
-      <div class="cards">
-        <article class="card card--wide" id="papers" data-station data-lines="ai" data-year="2024.6" data-short="Satellite LULC papers">
-          <p class="card__meta"><span class="pill" data-line="ai">Blue</span> 2024 – 2025 · CDPG</p>
-          <h3>Land use mapping from satellite imagery</h3>
-          <p>Semi-supervised segmentation of land use and land cover from high-resolution satellite images across India, and the storage formats that serve them.</p>
-          <ol class="papers">
-            <li>
-              <a href="https://doi.org/10.1109/InGARSS61818.2024.10984371">An Atmospheric Correction Integrated LULC Segmentation Model for High-Resolution Satellite Imagery</a>
-              <span>S. Mukherjee et al. · IEEE InGARSS 2024, Goa</span>
-            </li>
-            <li>
-              <a href="https://arxiv.org/abs/2408.02382">Cross Pseudo Supervision Framework for Sparsely Labelled Geospatial Images</a>
-              <span>Y. Dixit, N. Srivastava, J. D. Joy, R. Olikara, Swarup E, R. Ramesh · arXiv 2024</span>
-            </li>
-            <li>
-              <a href="https://arxiv.org/abs/2411.11291">Performance Evaluation of Geospatial Images based on Zarr and Tiff</a>
-              <span>J. Khan, Swarup E, R. Ramesh · arXiv 2024</span>
-            </li>
-            <li>
-              <a href="https://arxiv.org/abs/2507.18099">Comparison of Segmentation Methods in Remote Sensing for Land Use Land Cover</a>
-              <span>N. Srivastava, J. D. Joy, Y. Dixit, Swarup E, R. Ramesh · arXiv 2025</span>
-            </li>
-          </ol>
-          <p><a class="more" href="https://scholar.google.com/citations?user=Yp5J5mEAAAAJ">Google Scholar profile</a></p>
-        </article>
-
-        <article class="card" id="mizo" data-station data-lines="ai" data-year="2026.4" data-short="GPT-2 on Mizo">
-          <p class="card__meta"><span class="pill" data-line="ai">Blue</span> 2026 · IISc</p>
-          <h3>Teaching GPT-2 a low-resource language</h3>
-          <p>Fine-tuned GPT-2 small on Mizo. Test perplexity fell from 680 to 22.5. A logit-lens heatmap across checkpoints shows which layers pick up the language first.</p>
-          <p class="stack">PyTorch · Hugging Face Transformers · FastAPI</p>
-        </article>
-
-        <article class="card" id="memory" data-station data-lines="ai" data-year="2026.8" data-short="What to Remember">
-          <p class="card__meta"><span class="pill" data-line="ai">Blue</span> 2026 · IISc</p>
-          <h3>Learning What to Remember</h3>
-          <p>A vision-language model watching a long video has limited memory and does not know the question yet. Which frames should it keep? I reproduced the SimpleStream baseline (64.49 against the paper's 65.13), then trained a memory that scores frames by future answerability. It did not beat keeping the four most recent frames, and the write-up says so.</p>
-          <p class="stack">Qwen2.5-VL · SigLIP · OVO-Bench · PyTorch</p>
-        </article>
-
-        <article class="card" id="knowledgemind">
-          <p class="card__meta"><span class="pill" data-line="ai">Blue</span> 2026 · IISc team project</p>
-          <h3>KnowledgeMind</h3>
-          <p>A personal agent that routes private questions to a local model and the rest to a cloud model. My part: the evaluation harness, the fix for its conflict detection, and proactive nudges.</p>
-          <p class="stack">LangGraph · Ollama · FastAPI · React</p>
-        </article>
-      </div>
-    </section>
-
-    <section id="workshop" aria-labelledby="workshop-h">
-      <h2 id="workshop-h"><span class="num">04</span> Workshop <small>own projects, private for now</small></h2>
-      <div class="cards">
-        <article class="card" id="guidemesh" data-station data-lines="product" data-year="2026.7" data-short="GuideMesh">
-          <p class="card__meta"><span class="pill" data-line="product">Purple</span> 2026</p>
-          <h3>GuideMesh</h3>
-          <p>Record a workflow in a real browser and get an interactive product walkthrough, stored as JSON next to the code. Each step keeps several ranked ways to find its element. Replayed 50 commits later on three open-source apps, 37 of 38 steps still found the right element.</p>
-          <p class="stack">TypeScript · Playwright · React · Vitest</p>
-        </article>
-        <article class="card" id="videopipe">
-          <p class="card__meta"><span class="pill" data-line="ai">Blue</span> 2026</p>
-          <h3>videopipe</h3>
-          <p>Videos written as code: HTML and GSAP scenes rendered in headless Chrome, with a cloned voice, generated music and automatic checks. It produces explainers and a comedy series that teaches tech concepts.</p>
-          <p class="stack">GSAP · Headless Chrome · ffmpeg · TTS</p>
-        </article>
-        <article class="card" id="skills">
-          <p class="card__meta"><span class="pill" data-line="ai">Blue</span> 2026</p>
-          <h3>agent-skills</h3>
-          <p>30 skills for Claude Code and Codex that you install by group: design, debugging, evaluation, writing and media.</p>
-          <p class="stack">Markdown · Bash · Claude Code · Codex</p>
-        </article>
-      </div>
-    </section>
-
-    <section id="stack" aria-labelledby="stack-h">
-      <h2 id="stack-h"><span class="num">05</span> Stack</h2>
-      <dl class="stacklist">
+    <section class="plain" id="stack" aria-labelledby="stack-h">
+      <p class="tag">[ Stack ]</p>
+      <h2 id="stack-h" class="sr-only">Stack</h2>
+      <dl class="stack">
         <div><dt>Languages</dt><dd>Go, Java, TypeScript, Python, SQL</dd></div>
-        <div><dt>Backend</dt><dd>Express, FastAPI, Vert.x, Go net/http, GraphQL, Keycloak</dd></div>
-        <div><dt>DevOps &amp; platform</dt><dd>Kubernetes, Docker, Ceph, MinIO, AWS S3, Azure, JupyterHub, Prometheus, Grafana, Loki</dd></div>
-        <div><dt>Streaming &amp; data</dt><dd>Apache Flink, Kafka, RabbitMQ, Azure Event Hubs, ClickHouse, DuckDB, Parquet, PostgreSQL, MongoDB, Redis</dd></div>
+        <div><dt>Backend</dt><dd>Express, FastAPI, Vert.x, GraphQL, Keycloak</dd></div>
+        <div><dt>Platform</dt><dd>Kubernetes, Docker, Ceph, MinIO, AWS, Azure, JupyterHub, Prometheus, Grafana</dd></div>
+        <div><dt>Streaming &amp; data</dt><dd>Apache Flink, Kafka, RabbitMQ, Event Hubs, ClickHouse, DuckDB, PostgreSQL, MongoDB, Redis</dd></div>
         <div><dt>Front end</dt><dd>Angular, React, Next.js, ECharts</dd></div>
-        <div><dt>ML</dt><dd>PyTorch, Hugging Face, LangGraph, MCP, CatBoost</dd></div>
       </dl>
     </section>
 
-    <section id="contact" aria-labelledby="contact-h">
-      <h2 id="contact-h"><span class="num">06</span> Contact</h2>
-      <p class="contact"><a href="mailto:enamakalswarup@gmail.com">enamakalswarup@gmail.com</a></p>
-      <ul class="socials">
+    <section class="plain contact" id="contact" aria-labelledby="contact-h">
+      <p class="tag">[ Contact ]</p>
+      <h2 id="contact-h"><a href="mailto:enamakalswarup@gmail.com">enamakalswarup<wbr>@gmail.com</a></h2>
+      <ul class="links">
         <li><a href="https://github.com/swarupe">GitHub</a></li>
         <li><a href="https://www.linkedin.com/in/swarupe">LinkedIn</a></li>
         <li><a href="https://www.instagram.com/swarupe7">Instagram</a></li>
         <li><a href="https://x.com/swarup_e">X</a></li>
+        <li><a href="https://scholar.google.com/citations?user=Yp5J5mEAAAAJ">Scholar</a></li>
       </ul>
     </section>
   </main>
 
+  <aside class="hud" aria-hidden="true">
+    <span>sim</span>
+    <span>events/s <b data-hud="rate">0</b></span>
+    <span>watermark <b data-hud="wm">--:--:--</b></span>
+    <span>late <b data-hud="late">0.0%</b></span>
+  </aside>
+
   <footer class="foot">
-    <p>Hand-written HTML on GitHub Pages. No trackers.</p>
+    <p>Bengaluru · 12.97°N 77.59°E · hand-written HTML on GitHub Pages, no trackers.</p>
   </footer>
 </body>
 </html>
