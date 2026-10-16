@@ -1,237 +1,226 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Swarup E</title>
-  <meta name="description" content="Swarup E, Lead Engineer at the Centre of Data for Public Good, Bengaluru. Backend services, DevOps, streaming pipelines and data platforms.">
-  <meta property="og:title" content="Swarup E">
-  <meta property="og:description" content="Lead Engineer at CDPG, Bengaluru. I build the pipes data flows through.">
-  <meta property="og:url" content="https://swarup.me/">
-  <meta property="og:type" content="website">
-  <meta name="theme-color" content="#07080b">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <script>document.documentElement.classList.add('js');</script>
-  <script type="importmap">
-    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }
-  </script>
-  <script type="module" src="app.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Swarup E</title>
+<meta name="description" content="Swarup E, Lead Engineer at the Centre of Data for Public Good, Bengaluru. Backend services, Kubernetes platforms, data pipelines and front ends.">
+<meta property="og:title" content="Swarup E">
+<meta property="og:description" content="Lead Engineer at CDPG, Bengaluru. My profile as source code, compiled stage by stage.">
+<meta property="og:url" content="https://swarup.me/">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#07080c">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+} }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script type="module" src="main.js"></script>
 </head>
 <body>
-  <a class="skip" href="#main">Skip to content</a>
-  <canvas id="stage" aria-hidden="true"></canvas>
-  <div class="loader" aria-hidden="true"><span class="loader__label">Starting pipeline</span><span class="loader__pct">000%</span></div>
 
-  <header class="bar">
-    <a class="bar__name" href="#top">Swarup&nbsp;E</a>
-    <nav class="bar__nav" aria-label="Sections">
-      <a href="#pipeline">Pipeline</a>
-      <a href="#experience">Experience</a>
-      <a href="#papers">Papers</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+<header class="hud" aria-label="Build progress">
+  <a class="hud-mark" href="#top"><span class="hud-dot"></span>swc <span class="dim">swarup.src</span></a>
+  <ol class="hud-steps">
+    <li data-step="1"><a href="#lexer"><span>01</span> lex</a></li>
+    <li data-step="2"><a href="#parser"><span>02</span> parse</a></li>
+    <li data-step="3"><a href="#optimizer"><span>03</span> opt</a></li>
+    <li data-step="4"><a href="#linker"><span>04</span> link</a></li>
+    <li data-step="5"><a href="#output"><span>05</span> out</a></li>
+  </ol>
+</header>
 
-  <main id="main">
-    <section class="hero" id="top" data-state="0">
-      <p class="tag">[ Lead Engineer · Centre of Data for Public Good · Bengaluru ]</p>
-      <h1>Swarup&nbsp;E</h1>
-      <p class="hero__line">I build the pipes <em>data flows through.</em></p>
-      <p class="hero__sub">Backend services, streaming pipelines and data platforms, the Kubernetes clusters under them, and the front ends on top. Since Aug 2025 also on the online M.Tech in Data Science at IISc.</p>
-      <p class="hero__scroll tag">[ Scroll to run the pipeline ]</p>
-    </section>
+<div class="buildlog" aria-hidden="true"><span class="buildlog-prompt">$</span> <span id="buildlog-text">swc swarup.src --release</span></div>
+<div class="labels" id="labels" aria-hidden="true"></div>
 
-    <div id="pipeline">
-      <section class="chapter" data-state="1" aria-labelledby="c1">
-        <div class="panel">
-          <p class="tag">[ 01 / 05 · Ingest ]</p>
-          <h2 id="c1">Many sources, <em>one stream.</em></h2>
-          <p>City systems speak a dozen protocols. I wrote most of the framework that pulls them in, reshapes them and streams them into the exchange.</p>
-          <article class="work">
-            <h3>IUDX Adaptor Framework <span>2021 – 2023</span></h3>
-            <p>A configurable ingest pipeline on Apache Flink. RabbitMQ and PostgreSQL sinks, JSONPath and JavaScript transforms, checkpointing, and Prometheus, Grafana and Loki on Kubernetes. Top contributor, 178 of 435 commits.</p>
-          </article>
-          <article class="work">
-            <h3>IUDX Video Server <span>2021</span></h3>
-            <p>Proxies live camera feeds from city servers behind NAT out to the cloud, with load balancing and an API on top.</p>
-          </article>
-        </div>
+<main id="top">
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <p class="kicker"><span class="prompt">$</span> swc swarup.src <span class="dim">--release</span></p>
+    <h1 id="hero-title"><em>Compiling</em><br>Swarup&nbsp;E<span class="caret" aria-hidden="true"></span></h1>
+    <p class="lede">Lead Engineer at the Centre of Data for Public Good, Bengaluru. Engineer since 2019. I build backend services, Kubernetes platforms, data pipelines and front ends, and I do research on the side.</p>
+    <p class="scroll-hint"><span class="scroll-line" aria-hidden="true"></span>Scroll to compile</p>
+  </div>
+  <figure class="editor" aria-label="swarup.src, the source file">
+    <div class="editor-bar">
+      <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="editor-tab">swarup.src</span>
+      <span class="editor-meta">UTF-8 &middot; LF</span>
+    </div>
+    <pre class="code" id="code"><code><span class="ln"><span class="tk t-com">// swarup.src</span></span>
+<span class="ln"><span class="tk t-kw">module</span> <span class="tk t-id">swarup_e</span> <span class="tk t-pun">{</span></span>
+<span class="ln">  <span class="tk t-id">role</span>  <span class="tk t-op">=</span> <span class="tk t-str">"Lead Engineer"</span></span>
+<span class="ln">  <span class="tk t-id">org</span>   <span class="tk t-op">=</span> <span class="tk t-str">"CDPG"</span></span>
+<span class="ln">  <span class="tk t-id">city</span>  <span class="tk t-op">=</span> <span class="tk t-str">"Bengaluru"</span></span>
+<span class="ln">  <span class="tk t-id">since</span> <span class="tk t-op">=</span> <span class="tk t-num">2019</span></span>
+<span class="ln">  <span class="tk t-id">study</span> <span class="tk t-op">=</span> <span class="tk t-str">"M.Tech, IISc"</span></span>
+<span class="ln"></span>
+<span class="ln">  <span class="tk t-id">areas</span> <span class="tk t-op">=</span> <span class="tk t-pun">[</span><span class="tk t-id">backend</span><span class="tk t-pun">,</span> <span class="tk t-id">devops</span><span class="tk t-pun">,</span> <span class="tk t-id">data</span><span class="tk t-pun">,</span></span>
+<span class="ln">           <span class="tk t-id">frontend</span><span class="tk t-pun">,</span> <span class="tk t-id">research</span><span class="tk t-pun">,</span> <span class="tk t-id">side</span><span class="tk t-pun">]</span></span>
+<span class="ln"></span>
+<span class="ln">  <span class="tk t-kw">dead</span> <span class="tk t-pun">{</span>  <span class="tk t-com">// unreachable</span></span>
+<span class="ln">    <span class="tk t-id">student_projects</span><span class="tk t-pun">(</span><span class="tk t-num">2017</span><span class="tk t-pun">)</span></span>
+<span class="ln">    <span class="tk t-id">student_projects</span><span class="tk t-pun">(</span><span class="tk t-num">2018</span><span class="tk t-pun">)</span></span>
+<span class="ln">  <span class="tk t-pun">}</span></span>
+<span class="ln"></span>
+<span class="ln">  <span class="tk t-kw">link</span> <span class="tk t-pun">[</span><span class="tk t-id">go</span><span class="tk t-pun">,</span> <span class="tk t-id">kubernetes</span><span class="tk t-pun">,</span> <span class="tk t-id">flink</span><span class="tk t-pun">,</span></span>
+<span class="ln">        <span class="tk t-id">clickhouse</span><span class="tk t-pun">,</span> <span class="tk t-id">react</span><span class="tk t-pun">,</span> <span class="tk t-id">pytorch</span><span class="tk t-pun">]</span></span>
+<span class="ln"></span>
+<span class="ln">  <span class="tk t-kw">fn</span> <span class="tk t-id">ship</span><span class="tk t-pun">(</span><span class="tk t-id">idea</span><span class="tk t-pun">)</span> <span class="tk t-op">-&gt;</span> <span class="tk t-id">system</span> <span class="tk t-pun">{</span></span>
+<span class="ln">    <span class="tk t-id">idea</span> <span class="tk t-op">|&gt;</span> <span class="tk t-id">build</span> <span class="tk t-op">|&gt;</span> <span class="tk t-id">run</span> <span class="tk t-op">|&gt;</span> <span class="tk t-id">observe</span></span>
+<span class="ln">  <span class="tk t-pun">}</span></span>
+<span class="ln"></span>
+<span class="ln">  <span class="tk t-kw">export</span> <span class="tk t-id">contact</span></span>
+<span class="ln"><span class="tk t-pun">}</span></span></code></pre>
+  </figure>
+</section>
+
+<section class="stage" id="lexer" data-stage="1" aria-labelledby="lexer-title">
+  <article class="panel">
+    <p class="panel-step t-kw">01 &middot; lexer</p>
+    <h2 id="lexer-title">The source, broken into tokens</h2>
+    <p>I am a Lead Engineer at the Centre of Data for Public Good (CDPG) in Bengaluru, and have worked as an engineer since 2019. The work is broad: backend services, DevOps and Kubernetes, front ends, data platforms, research, and side projects.</p>
+    <p>Since August 2025 I have also been studying for an online M.Tech in Data Science and Business Analytics at IISc.</p>
+    <dl class="legend" id="token-legend">
+      <div><dt><i class="sw t-kw"></i>keywords</dt><dd data-count="kw">5</dd></div>
+      <div><dt><i class="sw t-id"></i>identifiers</dt><dd data-count="id">29</dd></div>
+      <div><dt><i class="sw t-str"></i>strings</dt><dd data-count="str">4</dd></div>
+      <div><dt><i class="sw t-num"></i>numbers</dt><dd data-count="num">3</dd></div>
+      <div><dt><i class="sw t-op"></i>operators</dt><dd data-count="op">10</dd></div>
+      <div><dt><i class="sw t-pun"></i>punctuation</dt><dd data-count="pun">26</dd></div>
+      <div><dt><i class="sw t-com"></i>comments</dt><dd data-count="com">2</dd></div>
+    </dl>
+  </article>
+</section>
+
+<section class="stage" id="parser" data-stage="2" aria-labelledby="parser-title">
+  <article class="panel panel-wide">
+    <p class="panel-step t-id">02 &middot; parser</p>
+    <h2 id="parser-title">The tree: six areas, one engineer</h2>
+    <div class="areas">
+      <section class="area" style="--c: var(--id)">
+        <h3>Backend</h3>
+        <ul>
+          <li><b>IUDX Data Sandbox</b> (2022 to 2025). Jupyter notebooks next to datasets. Go API with Keycloak JWT auth and build progress over Server-Sent Events. 70 of 93 backend commits.</li>
+          <li><b>Data marketplace file service</b> (2025). TypeScript and Express, S3 and MinIO multipart uploads, presigned URLs, Keycloak and policy checks, Redis job queue. 85 of 105 commits.</li>
+          <li><b>IUDX Video Server</b> (2021). Proxies live camera feeds from city servers behind NAT to the cloud, with load balancing and an API.</li>
+          <li><b>EpikInDiFi</b>. Listings moved to GraphQL (32% faster), async vendor integrations over RabbitMQ and Socket.IO, MongoDB text search.</li>
+        </ul>
       </section>
-
-      <section class="chapter" data-state="2" aria-labelledby="c2">
-        <div class="panel">
-          <p class="tag">[ 02 / 05 · Key by, window ]</p>
-          <h2 id="c2">Split by key, <em>cut into windows.</em></h2>
-          <p>Events fan out by key and close in event-time windows. The ones that arrive after the watermark go to a side output instead of being lost.</p>
-          <article class="work">
-            <h3>Streaming rules engine <span>2022 – 2023</span></h3>
-            <p>Apache Calcite SQL evaluated over streams buffered in RocksDB state, with event-time timers, state expiry, and an API to add, test and delete rules while the job runs.</p>
-          </article>
-        </div>
+      <section class="area" style="--c: var(--op)">
+        <h3>DevOps and Kubernetes</h3>
+        <ul>
+          <li><b>Hybrid storage and clusters</b> (2023 to now). Ceph, MinIO and Kubernetes across cloud and on-prem, with GPU nodes.</li>
+          <li><b>JupyterHub and BinderHub</b> on Kubernetes for the Data Sandbox.</li>
+          <li><b>Multi-kernel notebook images</b> (2026). Python, R, Julia, Scala. CPU image 16.1 GB to 8.1 GB, GPU image 38.9 GB to 26.5 GB.</li>
+          <li><b>Observability</b>. Prometheus, Grafana and Loki on Kubernetes.</li>
+        </ul>
       </section>
-
-      <section class="chapter" data-state="3" aria-labelledby="c3">
-        <div class="panel">
-          <p class="tag">[ 03 / 05 · Store ]</p>
-          <h2 id="c3">Columns, <em>not rows.</em></h2>
-          <p>The stream lands in columnar storage so a question over billions of rows comes back in under a second.</p>
-          <article class="work">
-            <h3>Analytics at volume <span>2023 – now</span></h3>
-            <p>ClickHouse clusters for high-velocity transaction data, fed in real time by Azure Functions and Event Hubs.</p>
-          </article>
-          <article class="work">
-            <h3>Hybrid storage and clusters <span>2023 – now</span></h3>
-            <p>Ceph and MinIO backends and Kubernetes across cloud and on-prem, including GPU nodes for ML workloads.</p>
-          </article>
-        </div>
+      <section class="area" style="--c: var(--num)">
+        <h3>Data</h3>
+        <ul>
+          <li><b>IUDX Adaptor Framework</b> (2021 to 2023). Ingest pipeline on Apache Flink, Calcite SQL rules engine over RocksDB state, RabbitMQ and PostgreSQL sinks. Top contributor, 178 of 435 commits. Benchmarked JS engines and moved transforms from Rhino to Nashorn.</li>
+          <li><b>Analytics at volume</b> (2023 to now). ClickHouse clusters holding billions of rows, sub-second queries, fed by Azure Functions and Event Hubs.</li>
+        </ul>
       </section>
-
-      <section class="chapter" data-state="4" aria-labelledby="c4">
-        <div class="panel">
-          <p class="tag">[ 04 / 05 · Serve ]</p>
-          <h2 id="c4">Out to everyone <em>who needs it.</em></h2>
-          <p>Data is only useful once people can reach it. These are the platforms that hand it out.</p>
-          <article class="work">
-            <h3>IUDX Data Sandbox <span>2022 – 2025</span></h3>
-            <p>Jupyter notebooks next to the exchange's datasets. A Go API with Keycloak auth, build progress streamed over Server-Sent Events, JupyterHub and BinderHub on Kubernetes. 70 of 93 backend commits.</p>
-          </article>
-          <article class="work">
-            <h3>Data marketplace file service <span>2025</span></h3>
-            <p>S3 and MinIO multipart uploads, short-lived presigned URLs, policy checks, and in-browser Parquet previews through DuckDB.</p>
-          </article>
-          <article class="work">
-            <h3>Multi-kernel notebook images <span>2026</span></h3>
-            <p>Python, R, Julia and Scala in one Jupyter image. CPU image cut from 16.1 GB to 8.1 GB, GPU image from 38.9 GB to 26.5 GB.</p>
-          </article>
-        </div>
+      <section class="area" style="--c: var(--str)">
+        <h3>Frontend</h3>
+        <ul>
+          <li><b>In-browser Parquet previews</b> via DuckDB in the marketplace file service.</li>
+          <li><b>Latitude Fintech</b>. A Chrome extension that records clicks into guided product tours.</li>
+          <li>Angular, React, Next.js and ECharts.</li>
+        </ul>
       </section>
-
-      <section class="chapter" data-state="5" aria-labelledby="c5">
-        <div class="panel">
-          <p class="tag">[ 05 / 05 · Learn ]</p>
-          <h2 id="c5">And sometimes, <em>research.</em></h2>
-          <p>Segmenting land use from satellite imagery at CDPG, and long-video memory and low-resource language models at IISc.</p>
-          <article class="work">
-            <h3>Learning What to Remember <span>2026 · IISc</span></h3>
-            <p>Which frames should a vision-language model keep from a long video before it knows the question? I reproduced the SimpleStream baseline, then reported honestly that the learned memory did not beat it.</p>
-          </article>
-          <article class="work">
-            <h3>GPT-2 on Mizo <span>2026 · IISc</span></h3>
-            <p>Fine-tuned GPT-2 on a low-resource language. Test perplexity fell from 680 to 22.5.</p>
-          </article>
-        </div>
+      <section class="area" style="--c: var(--kw)">
+        <h3>Research</h3>
+        <ul>
+          <li><b>4 papers</b> on land use and land cover segmentation from satellite imagery: IEEE InGARSS 2024, two on arXiv in 2024, one on arXiv in 2025.</li>
+          <li><b>Learning What to Remember</b> (IISc). Streaming memory for vision-language models. The learned memory did not beat the recent-frames baseline, and the report says so.</li>
+          <li><b>GPT-2 fine-tuned on Mizo</b> (IISc). Test perplexity 680 to 22.5.</li>
+          <li><b>KYC OCR</b> at EpikInDiFi with Tesseract and Detectron2, 96% accuracy.</li>
+        </ul>
+      </section>
+      <section class="area" style="--c: var(--teal)">
+        <h3>Side projects <span class="tag">private for now</span></h3>
+        <ul>
+          <li><b>GuideMesh</b>. Record a browser workflow, get a walkthrough that survives code changes. 37 of 38 steps found 50 commits later.</li>
+          <li><b>videopipe</b>. Videos written as code: HTML and GSAP scenes rendered in headless Chrome.</li>
+          <li><b>agent-skills</b>. 30 skills for Claude Code and Codex.</li>
+        </ul>
       </section>
     </div>
+  </article>
+</section>
 
-    <section class="plain" id="experience" aria-labelledby="exp-h">
-      <p class="tag">[ Experience ]</p>
-      <h2 id="exp-h">Where I've <em>worked.</em></h2>
-      <ol class="rows">
-        <li>
-          <span class="rows__when">2023 – now</span>
-          <div>
-            <h3>Lead Engineer · Centre of Data for Public Good</h3>
-            <p>Lead a cross-functional team on the core data platform. Kubernetes across cloud and on-prem, ClickHouse at scale, Ceph and MinIO, real-time pipelines on Azure. Architecture reviews and mentoring.</p>
-          </div>
-        </li>
-        <li>
-          <span class="rows__when">2022 – 2023</span>
-          <div>
-            <h3>Senior Software Engineer · CDPG</h3>
-            <p>Backend services in Go, Python and Node.js for analytics workloads, and Flink streaming jobs.</p>
-          </div>
-        </li>
-        <li>
-          <span class="rows__when">2020 – 2022</span>
-          <div>
-            <h3>Software Engineer · CDPG</h3>
-            <p>India Urban Data Exchange: the video server, the data sandbox and the adaptor framework.</p>
-          </div>
-        </li>
-        <li>
-          <span class="rows__when">2019 – 2020</span>
-          <div>
-            <h3>Member of Technical Staff · EpikInDiFi</h3>
-            <p>Moved a lending platform's listings to GraphQL (32% faster), built async vendor integrations over RabbitMQ and Socket.IO, and a 96%-accurate KYC OCR with Tesseract and Detectron2.</p>
-          </div>
-        </li>
-        <li>
-          <span class="rows__when">2019</span>
-          <div>
-            <h3>Software Developer Intern · Latitude Fintech</h3>
-            <p>A Chrome extension that records clicks and turns them into guided product tours.</p>
-          </div>
-        </li>
-        <li>
-          <span class="rows__when">2025 – now</span>
-          <div>
-            <h3>M.Tech (Online), Data Science and Business Analytics · IISc</h3>
-            <p>Alongside full-time work.</p>
-          </div>
-        </li>
-      </ol>
-    </section>
+<section class="stage" id="optimizer" data-stage="3" aria-labelledby="optimizer-title">
+  <article class="panel">
+    <p class="panel-step t-num">03 &middot; optimizer</p>
+    <h2 id="optimizer-title">Dead code, removed</h2>
+    <p>The branch marked <code class="inline t-kw">dead</code> holds the 2017 and 2018 student projects. Nothing in the current build calls it, so the optimizer drops it. The history stays in git; the binary gets smaller.</p>
+    <div class="meter">
+      <div class="meter-row"><span>bytes saved</span><strong id="bytes-saved">83</strong></div>
+      <div class="meter-row"><span>tree nodes</span><strong id="node-count">30 &rarr; 27</strong></div>
+      <div class="meter-row"><span>branches removed</span><strong>1</strong></div>
+    </div>
+    <p class="note">The byte count is the length of the <code class="inline">dead { ... }</code> block in swarup.src, measured in the browser.</p>
+  </article>
+</section>
 
-    <section class="plain" id="papers" aria-labelledby="pap-h">
-      <p class="tag">[ Papers ]</p>
-      <h2 id="pap-h">Published <em>with my team.</em></h2>
-      <ol class="pubs">
-        <li><a href="https://doi.org/10.1109/InGARSS61818.2024.10984371">An Atmospheric Correction Integrated LULC Segmentation Model for High-Resolution Satellite Imagery</a><span>IEEE InGARSS 2024 · S. Mukherjee et al.</span></li>
-        <li><a href="https://arxiv.org/abs/2408.02382">Cross Pseudo Supervision Framework for Sparsely Labelled Geospatial Images</a><span>arXiv 2024 · Y. Dixit, N. Srivastava, J. D. Joy, R. Olikara, Swarup E, R. Ramesh</span></li>
-        <li><a href="https://arxiv.org/abs/2411.11291">Performance Evaluation of Geospatial Images based on Zarr and Tiff</a><span>arXiv 2024 · J. Khan, Swarup E, R. Ramesh</span></li>
-        <li><a href="https://arxiv.org/abs/2507.18099">Comparison of Segmentation Methods in Remote Sensing for Land Use Land Cover</a><span>arXiv 2025 · N. Srivastava, J. D. Joy, Y. Dixit, Swarup E, R. Ramesh</span></li>
-      </ol>
-      <p><a class="more" href="https://scholar.google.com/citations?user=Yp5J5mEAAAAJ">Google Scholar &rarr;</a></p>
-    </section>
+<section class="stage" id="linker" data-stage="4" aria-labelledby="linker-title">
+  <article class="panel">
+    <p class="panel-step t-op">04 &middot; linker</p>
+    <h2 id="linker-title">Linked against the stack</h2>
+    <dl class="stack">
+      <div><dt>Languages</dt><dd>Go, Java, TypeScript, Python, SQL</dd></div>
+      <div><dt>Services and auth</dt><dd>Express, FastAPI, Vert.x, GraphQL, Keycloak</dd></div>
+      <div><dt>Platform</dt><dd>Kubernetes, Docker, Ceph, MinIO, AWS, Azure, JupyterHub, Prometheus, Grafana</dd></div>
+      <div><dt>Data</dt><dd>Flink, Kafka, RabbitMQ, Event Hubs, ClickHouse, DuckDB, PostgreSQL, MongoDB, Redis</dd></div>
+      <div><dt>Frontend</dt><dd>Angular, React, Next.js, ECharts</dd></div>
+      <div><dt>ML</dt><dd>PyTorch</dd></div>
+    </dl>
+  </article>
+</section>
 
-    <section class="plain" id="workshop" aria-labelledby="ws-h">
-      <p class="tag">[ Workshop · private for now ]</p>
-      <h2 id="ws-h">Things I build <em>after hours.</em></h2>
-      <div class="grid3">
-        <article><h3>GuideMesh</h3><p>Record a browser workflow, get a product walkthrough that survives code changes. 37 of 38 steps still found their element 50 commits later.</p></article>
-        <article><h3>videopipe</h3><p>Videos written as code: HTML and GSAP scenes rendered in headless Chrome, with a cloned voice and generated music.</p></article>
-        <article><h3>agent-skills</h3><p>30 skills for Claude Code and Codex, installed by group: design, debugging, evaluation, writing and media.</p></article>
-      </div>
-    </section>
+<section class="stage stage-out" id="output" data-stage="5" aria-labelledby="out-title">
+  <article class="card" id="card">
+    <p class="panel-step t-str">05 &middot; output <span class="dim">swarup.bin</span></p>
+    <h2 id="out-title">Swarup E</h2>
+    <p class="card-role">Lead Engineer, Centre of Data for Public Good, Bengaluru</p>
+    <ul class="contact">
+      <li><span>email</span><a href="mailto:enamakalswarup@gmail.com">enamakalswarup@gmail.com</a></li>
+      <li><span>github</span><a href="https://github.com/swarupe">github.com/swarupe</a></li>
+      <li><span>linkedin</span><a href="https://www.linkedin.com/in/swarupe">linkedin.com/in/swarupe</a></li>
+      <li><span>scholar</span><a href="https://scholar.google.com/citations?user=Yp5J5mEAAAAJ">Google Scholar</a></li>
+      <li><span>social</span><span class="elsewhere"><a href="https://www.instagram.com/swarupe7">instagram/swarupe7</a> <a href="https://x.com/swarup_e">x.com/swarup_e</a></span></li>
+    </ul>
+    <ol class="roles">
+      <li><time>Apr 2023 to now</time><span>Lead Engineer, CDPG</span></li>
+      <li><time>Apr 2022</time><span>Senior Software Engineer, CDPG</span></li>
+      <li><time>Dec 2020</time><span>Software Engineer, CDPG</span></li>
+      <li><time>Jul 2019 to Dec 2020</time><span>Member of Technical Staff, EpikInDiFi</span></li>
+      <li><time>Feb to Jun 2019</time><span>Intern, Latitude Fintech</span></li>
+      <li><time>Aug 2025 to now</time><span>Online M.Tech, Data Science and Business Analytics, IISc</span></li>
+    </ol>
+    <h3 class="card-sub">papers</h3>
+    <ol class="papers">
+      <li><a href="https://doi.org/10.1109/InGARSS61818.2024.10984371">An Atmospheric Correction Integrated LULC Segmentation Model for High-Resolution Satellite Imagery</a><span>IEEE InGARSS 2024</span></li>
+      <li><a href="https://arxiv.org/abs/2408.02382">Cross Pseudo Supervision Framework for Sparsely Labelled Geospatial Images</a><span>arXiv 2024</span></li>
+      <li><a href="https://arxiv.org/abs/2411.11291">Performance Evaluation of Geospatial Images based on Zarr and Tiff</a><span>arXiv 2024</span></li>
+      <li><a href="https://arxiv.org/abs/2507.18099">Comparison of Segmentation Methods in Remote Sensing for Land Use Land Cover</a><span>arXiv 2025</span></li>
+    </ol>
+  </article>
+</section>
 
-    <section class="plain" id="stack" aria-labelledby="stack-h">
-      <p class="tag">[ Stack ]</p>
-      <h2 id="stack-h" class="sr-only">Stack</h2>
-      <dl class="stack">
-        <div><dt>Languages</dt><dd>Go, Java, TypeScript, Python, SQL</dd></div>
-        <div><dt>Backend</dt><dd>Express, FastAPI, Vert.x, GraphQL, Keycloak</dd></div>
-        <div><dt>Platform</dt><dd>Kubernetes, Docker, Ceph, MinIO, AWS, Azure, JupyterHub, Prometheus, Grafana</dd></div>
-        <div><dt>Streaming &amp; data</dt><dd>Apache Flink, Kafka, RabbitMQ, Event Hubs, ClickHouse, DuckDB, PostgreSQL, MongoDB, Redis</dd></div>
-        <div><dt>Front end</dt><dd>Angular, React, Next.js, ECharts</dd></div>
-      </dl>
-    </section>
-
-    <section class="plain contact" id="contact" aria-labelledby="contact-h">
-      <p class="tag">[ Contact ]</p>
-      <h2 id="contact-h"><a href="mailto:enamakalswarup@gmail.com">enamakalswarup<wbr>@gmail.com</a></h2>
-      <ul class="links">
-        <li><a href="https://github.com/swarupe">GitHub</a></li>
-        <li><a href="https://www.linkedin.com/in/swarupe">LinkedIn</a></li>
-        <li><a href="https://www.instagram.com/swarupe7">Instagram</a></li>
-        <li><a href="https://x.com/swarup_e">X</a></li>
-        <li><a href="https://scholar.google.com/citations?user=Yp5J5mEAAAAJ">Scholar</a></li>
-      </ul>
-    </section>
-  </main>
-
-  <aside class="hud" aria-hidden="true">
-    <span>sim</span>
-    <span>events/s <b data-hud="rate">0</b></span>
-    <span>watermark <b data-hud="wm">--:--:--</b></span>
-    <span>late <b data-hud="late">0.0%</b></span>
-  </aside>
-
-  <footer class="foot">
-    <p>Bengaluru · 12.97°N 77.59°E · hand-written HTML on GitHub Pages, no trackers.</p>
-  </footer>
+</main>
+<footer class="foot"><p>exit 0 &middot; swarup.me &middot; plain HTML, three.js and GSAP on GitHub Pages</p></footer>
 </body>
 </html>

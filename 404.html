@@ -1,21 +1,26 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Not found</title>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not found</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; min-height: 100svh; display: grid; place-items: center; background: #07080c; color: #dfe3ee; font: 400 14px/1.7 "JetBrains Mono", ui-monospace, monospace; padding: 16px; box-sizing: border-box; }
+  main { max-width: 560px; }
+  p { margin: 0 0 12px; color: #a3abc0; }
+  .err { color: #ff5d5d; }
+  h1 { font: 400 clamp(44px, 10vw, 80px)/1 "Instrument Serif", serif; margin: 0 0 18px; color: #f3f4f8; }
+  a { color: #7fd4ff; }
+</style>
 </head>
 <body>
-  <main>
-    <section class="hero">
-      <p class="tag">[ 404 · event dropped ]</p>
-      <h1>Late <em>event.</em></h1>
-      <p class="hero__line">This page arrived after the watermark.</p>
-      <p><a class="more" href="/">Back to the pipeline &rarr;</a></p>
-    </section>
-  </main>
+<main>
+  <p><span class="err">error[E0404]</span>: unresolved path</p>
+  <h1>Symbol not found.</h1>
+  <p>Nothing in swarup.bin links to this address.</p>
+  <p><a href="/">Back to the build &rarr;</a></p>
+</main>
 </body>
 </html>
