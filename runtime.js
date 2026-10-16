@@ -1,7 +1,7 @@
-// Stage 06: the compiled binary running. A tiling window manager with htop (skills as
-// processes) and tail -f career.log. Static HTML in the card already carries the same
+// Stage 06: the compiled binary running. A full-screen tiling window manager with three
+// workspaces: main (htop, tail -f career.log), stack (fastfetch, git shortlog) and mail. Static HTML in the card already carries the same
 // facts, so this view only renders when JavaScript runs.
-import { AREAS, PROCS, CAREER, COMMITS } from './data.js';
+import { AREAS, PROCS, CAREER, COMMITS, STACK, PLAN, CONTACT, PALETTE } from './data.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -50,12 +50,76 @@ function buildShortlog(box) {
     <span class="rt-sl-bar"><i style="--w: ${(mine / all * 100).toFixed(1)}%"></i></span></div>`).join('');
 }
 
+function buildFetch(box) {
+  const years = new Date().getFullYear() - 2019;
+  const swatches = ['bg', 'kw', 'num', 'str', 'id', 'op', 'teal'].map((k) => `<i style="background: #${PALETTE[k].toString(16).padStart(6, '0')}"></i>`).join('');
+  box.innerHTML = `<div class="rt-fetch"><div class="rt-logo" aria-hidden="true">SE<small>since 2019</small></div><dl class="rt-kv">
+    <div class="rt-hd"><span class="t-str">swarup</span>@cdpg</div>
+    <div><dt>role</dt><dd>Lead Engineer, Centre of Data for Public Good</dd></div>
+    <div><dt>uptime</dt><dd>${years}+ years, engineer since 2019</dd></div>
+    ${STACK.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}
+    <div class="rt-swatches">${swatches}</div></dl></div>`;
+}
+
+// A real compose window: Send opens the reader's mail app with the subject and body filled in.
+function buildMail(box) {
+  box.innerHTML = `<form class="rt-mail" id="rt-mail-form">
+    <div class="rt-hdr"><span>To:</span><span>Swarup E &lt;<a href="mailto:${CONTACT.email}">${CONTACT.email}</a>&gt;</span>
+      <label for="rt-subject">Subject:</label><input id="rt-subject" name="subject" value="hello" autocomplete="off"></div>
+    <label class="sr-only" for="rt-body">Message</label>
+    <textarea id="rt-body" name="body" rows="6" placeholder="Building something with data, infra or the web? Write here."></textarea>
+    <div class="rt-mail-actions"><button type="submit">send <kbd>ctrl enter</kbd></button><span class="rt-mail-note">opens your mail app</span></div>
+    <div class="rt-links">${CONTACT.links.map(([k, href, label]) => `<a href="${href}" target="_blank" rel="noopener"><span>${k}</span>${esc(label)}</a>`).join('')}</div>
+  </form>`;
+  const form = box.querySelector('form');
+  const send = (e) => {
+    e?.preventDefault();
+    const q = new URLSearchParams({ subject: form.subject.value || 'hello', body: form.body.value }).toString().replace(/\+/g, '%20');
+    location.href = `mailto:${CONTACT.email}?${q}`;
+  };
+  form.addEventListener('submit', send);
+  form.body.addEventListener('keydown', (e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) send(e); });
+}
+
+function buildPlan(box) {
+  box.innerHTML = `<div class="rt-plan">${PLAN.map(([h, items]) => `<p class="rt-plan-h">## ${h}</p><ul>${items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul>`).join('')}</div>`;
+}
+
+// Workspaces: the tabs, Alt+1..3 while the runtime is on screen, and the focused pane's title.
+function bindWm(sec) {
+  const tabs = [...sec.querySelectorAll('.wm-ws button')];
+  const spaces = [...sec.querySelectorAll('.wm-tiles')];
+  const title = $('#wm-title');
+  const focus = (pane) => {
+    sec.querySelectorAll('.pane.is-focused').forEach((p) => p.classList.remove('is-focused'));
+    pane.classList.add('is-focused');
+    title.textContent = pane.dataset.title;
+  };
+  const show = (n) => {
+    tabs.forEach((t) => t.setAttribute('aria-current', String(t.dataset.ws === n)));
+    spaces.forEach((w) => w.classList.toggle('is-active', w.dataset.ws === n));
+    focus(sec.querySelector(`.wm-tiles[data-ws="${n}"] .pane`));
+  };
+  tabs.forEach((t) => t.addEventListener('click', () => show(t.dataset.ws)));
+  sec.querySelectorAll('.pane').forEach((p) => p.addEventListener('pointerdown', () => focus(p)));
+  addEventListener('keydown', (e) => {
+    if (!e.altKey || !document.documentElement.classList.contains('in-run')) return;
+    const m = /^Digit([1-3])$/.exec(e.code);
+    if (m) { e.preventDefault(); show(m[1]); }
+  });
+  show('1');
+}
+
 export function mountRuntime({ still }) {
   const sec = $('#run');
   const htop = $('#rt-htop'), log = $('#rt-log'), meta = $('#rt-log-meta');
   buildHtop(htop);
   buildLog(log);
   buildShortlog($('#rt-shortlog'));
+  buildFetch($('#rt-fetch'));
+  buildMail($('#rt-mail'));
+  buildPlan($('#rt-plan'));
+  bindWm(sec);
   sec.hidden = false;
 
   const lines = [...log.querySelectorAll('.rt-line:not(.rt-follow)')];

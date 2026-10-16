@@ -3,6 +3,7 @@
 import { SOURCE, lex, deadBytes } from './source.js';
 import { runLoader } from './loader.js';
 import { mountRuntime } from './runtime.js';
+import { mountCursor } from './cursor.js';
 
 window.__frames = 0;
 const root = document.documentElement;
@@ -40,11 +41,25 @@ async function boot() {
 
 // Stage 06 sits after the 3D stages. The scene reads this flag for the HUD and the build log.
 function watchRun() {
+  const run = document.getElementById('run');
   new IntersectionObserver(([e]) => root.classList.toggle('in-run', e.isIntersecting),
-    { rootMargin: '0px 0px -55% 0px' }).observe(document.getElementById('run'));
+    { rootMargin: '0px 0px -55% 0px' }).observe(run);
+  // The runtime is a full-screen desktop: once scrolling stops near it, ease it flush with the viewport.
+  let settle = 0;
+  addEventListener('scroll', () => {
+    clearTimeout(settle);
+    settle = setTimeout(() => {
+      if (root.classList.contains('loading')) return;
+      const top = run.getBoundingClientRect().top;
+      if (Math.abs(top) > 1 && Math.abs(top) < innerHeight * 0.3) {
+        scrollTo({ top: scrollY + top, behavior: reduced ? 'auto' : 'smooth' });
+      }
+    }, 160);
+  }, { passive: true });
 }
 
 mountRuntime({ still: reduced });
+mountCursor();
 watchRun();
 
 // The scene starts when the intro presses Enter, or right away without the intro.

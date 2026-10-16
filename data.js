@@ -109,3 +109,34 @@ export const CAREER = [
   ['2026', 'cdpg', 'ship', 'Multi-kernel notebook images. CPU image 16.1 GB to 8.1 GB.'],
   ['now', 'cdpg', 'running', 'Lead Engineer, Bengaluru.'],
 ];
+
+// fastfetch: the stack, grouped the way the linker panel groups it.
+export const STACK = [
+  ['languages', 'Go, Java, TypeScript, Python, SQL'],
+  ['services', 'Express, FastAPI, Vert.x, GraphQL, Keycloak'],
+  ['platform', 'Kubernetes, Docker, Ceph, MinIO, AWS, Azure'],
+  ['notebooks', 'JupyterHub, BinderHub'],
+  ['observe', 'Prometheus, Grafana, Loki'],
+  ['streams', 'Flink, Kafka, RabbitMQ, Event Hubs'],
+  ['storage', 'ClickHouse, DuckDB, PostgreSQL, MongoDB, Redis'],
+  ['frontend', 'Angular, React, Next.js, ECharts'],
+  ['ml', 'PyTorch'],
+];
+
+// cat ~/.plan
+export const PLAN = [
+  ['work', ['Lead Engineer at CDPG since Apr 2023', 'ClickHouse analytics over billions of rows', 'Ceph, MinIO and Kubernetes across cloud and on-prem', 'Multi-kernel notebook images']],
+  ['study', ['Online M.Tech at IISc, Data Science and Business Analytics']],
+  ['side', ['guidemesh', 'videopipe', 'agent-skills']],
+];
+
+export const CONTACT = {
+  email: 'enamakalswarup@gmail.com',
+  links: [
+    ['github', 'https://github.com/swarupe', 'github.com/swarupe'],
+    ['linkedin', 'https://www.linkedin.com/in/swarupe', 'linkedin.com/in/swarupe'],
+    ['scholar', 'https://scholar.google.com/citations?user=Yp5J5mEAAAAJ', 'Google Scholar'],
+    ['instagram', 'https://www.instagram.com/swarupe7', 'instagram/swarupe7'],
+    ['x', 'https://x.com/swarup_e', 'x.com/swarup_e'],
+  ],
+};

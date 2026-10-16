@@ -238,34 +238,53 @@
 </section>
 
 <section class="run" id="run" aria-labelledby="run-title" hidden>
-  <header class="run-head">
-    <p class="panel-step t-teal">06 &middot; run <span class="dim">./swarup.bin</span></p>
-    <h2 id="run-title">Running since 2019</h2>
-  </header>
+  <h2 id="run-title" class="sr-only">06, run: swarup.bin, running since 2019</h2>
   <div class="wm">
     <div class="wm-bar">
-      <span class="wm-ws"><b>1</b><i>2</i><i>3</i></span>
-      <span class="wm-title">swarup.bin</span>
-      <span class="wm-right"><span class="wm-host">swarup@cdpg</span><span id="rt-clock"></span></span>
+      <nav class="wm-ws" aria-label="Workspaces">
+        <button type="button" data-ws="1" aria-current="true"><b>1</b>main</button>
+        <button type="button" data-ws="2"><b>2</b>stack</button>
+        <button type="button" data-ws="3"><b>3</b>mail</button>
+      </nav>
+      <span class="wm-title"><span class="t-str">06 &middot; run</span> <span id="wm-title">htop</span></span>
+      <span class="wm-right"><span class="wm-hint">alt 1-3</span><span class="wm-host">swarup@cdpg</span><span id="rt-clock"></span></span>
     </div>
-    <div class="wm-tiles">
-      <article class="pane rt-p-htop">
+
+    <div class="wm-tiles is-active" data-ws="1" aria-label="Workspace 1, main">
+      <article class="pane rt-p-htop" data-title="htop">
         <div class="pane-head"><span class="pane-cmd">htop</span><span class="pane-meta">skills as processes</span></div>
         <div class="pane-body" id="rt-htop"></div>
       </article>
-      <article class="pane rt-p-log">
+      <article class="pane rt-p-log" data-title="tail -f career.log">
         <div class="pane-head"><span class="pane-cmd">tail -f ~/career.log</span><span class="pane-meta" id="rt-log-meta">following</span></div>
         <div class="pane-body" id="rt-log"></div>
       </article>
-      <article class="pane rt-p-sl">
+    </div>
+
+    <div class="wm-tiles" data-ws="2" aria-label="Workspace 2, stack">
+      <article class="pane rt-p-fetch" data-title="fastfetch">
+        <div class="pane-head"><span class="pane-cmd">fastfetch</span><span class="pane-meta">the full stack</span></div>
+        <div class="pane-body" id="rt-fetch"></div>
+      </article>
+      <article class="pane rt-p-sl" data-title="git shortlog">
         <div class="pane-head"><span class="pane-cmd">git shortlog -sn --author=swarup</span><span class="pane-meta">my share of commits</span></div>
         <div class="pane-body" id="rt-shortlog"></div>
+      </article>
+    </div>
+
+    <div class="wm-tiles" data-ws="3" aria-label="Workspace 3, mail">
+      <article class="pane rt-p-mail" data-title="mutt">
+        <div class="pane-head"><span class="pane-cmd">mutt -s hello</span><span class="pane-meta">compose</span></div>
+        <div class="pane-body" id="rt-mail"></div>
+      </article>
+      <article class="pane rt-p-plan" data-title="cat .plan">
+        <div class="pane-head"><span class="pane-cmd">cat ~/.plan</span><span class="pane-meta">right now</span></div>
+        <div class="pane-body" id="rt-plan"></div>
       </article>
     </div>
   </div>
 </section>
 
 </main>
-<footer class="foot"><p>exit 0 &middot; swarup.me &middot; plain HTML, three.js and GSAP on GitHub Pages</p></footer>
 </body>
 </html>
