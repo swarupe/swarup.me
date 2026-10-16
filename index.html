@@ -1,237 +1,334 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Swarup E</title>
-  <meta name="description" content="Swarup E, Lead Engineer at the Centre of Data for Public Good, Bengaluru. Backend services, DevOps, streaming pipelines and data platforms.">
-  <meta property="og:title" content="Swarup E">
-  <meta property="og:description" content="Lead Engineer at CDPG, Bengaluru. I build the pipes data flows through.">
-  <meta property="og:url" content="https://swarup.me/">
-  <meta property="og:type" content="website">
-  <meta name="theme-color" content="#07080b">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <script>document.documentElement.classList.add('js');</script>
-  <script type="importmap">
-    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }
-  </script>
-  <script type="module" src="app.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Swarup E · The Trace</title>
+<meta name="description" content="Swarup E, Lead Engineer at CDPG. Your visit to this site, traced through every layer of the stack he builds.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2305070d'/%3E%3Crect x='6' y='9' width='20' height='3' rx='1.5' fill='%23ff5b2e'/%3E%3Crect x='10' y='15' width='14' height='3' rx='1.5' fill='%238ea2d8'/%3E%3Crect x='14' y='21' width='9' height='3' rx='1.5' fill='%238ea2d8'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+  }
+}
+</script>
 </head>
 <body>
-  <a class="skip" href="#main">Skip to content</a>
-  <canvas id="stage" aria-hidden="true"></canvas>
-  <div class="loader" aria-hidden="true"><span class="loader__label">Starting pipeline</span><span class="loader__pct">000%</span></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
 
-  <header class="bar">
-    <a class="bar__name" href="#top">Swarup&nbsp;E</a>
-    <nav class="bar__nav" aria-label="Sections">
-      <a href="#pipeline">Pipeline</a>
-      <a href="#experience">Experience</a>
-      <a href="#papers">Papers</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+<header class="topbar">
+  <a class="brand" href="#top">swarup<span>.me</span></a>
+  <div class="topbar__trace mono"><span class="dot"></span>trace <span id="trace-id">0000000000000000</span></div>
+  <nav class="topbar__nav mono">
+    <a href="#trace">spans</a>
+    <a href="#contact">contact</a>
+  </nav>
+</header>
 
-  <main id="main">
-    <section class="hero" id="top" data-state="0">
-      <p class="tag">[ Lead Engineer · Centre of Data for Public Good · Bengaluru ]</p>
-      <h1>Swarup&nbsp;E</h1>
-      <p class="hero__line">I build the pipes <em>data flows through.</em></p>
-      <p class="hero__sub">Backend services, streaming pipelines and data platforms, the Kubernetes clusters under them, and the front ends on top. Since Aug 2025 also on the online M.Tech in Data Science at IISc.</p>
-      <p class="hero__scroll tag">[ Scroll to run the pipeline ]</p>
-    </section>
-
-    <div id="pipeline">
-      <section class="chapter" data-state="1" aria-labelledby="c1">
-        <div class="panel">
-          <p class="tag">[ 01 / 05 · Ingest ]</p>
-          <h2 id="c1">Many sources, <em>one stream.</em></h2>
-          <p>City systems speak a dozen protocols. I wrote most of the framework that pulls them in, reshapes them and streams them into the exchange.</p>
-          <article class="work">
-            <h3>IUDX Adaptor Framework <span>2021 – 2023</span></h3>
-            <p>A configurable ingest pipeline on Apache Flink. RabbitMQ and PostgreSQL sinks, JSONPath and JavaScript transforms, checkpointing, and Prometheus, Grafana and Loki on Kubernetes. Top contributor, 178 of 435 commits.</p>
-          </article>
-          <article class="work">
-            <h3>IUDX Video Server <span>2021</span></h3>
-            <p>Proxies live camera feeds from city servers behind NAT out to the cloud, with load balancing and an API on top.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="chapter" data-state="2" aria-labelledby="c2">
-        <div class="panel">
-          <p class="tag">[ 02 / 05 · Key by, window ]</p>
-          <h2 id="c2">Split by key, <em>cut into windows.</em></h2>
-          <p>Events fan out by key and close in event-time windows. The ones that arrive after the watermark go to a side output instead of being lost.</p>
-          <article class="work">
-            <h3>Streaming rules engine <span>2022 – 2023</span></h3>
-            <p>Apache Calcite SQL evaluated over streams buffered in RocksDB state, with event-time timers, state expiry, and an API to add, test and delete rules while the job runs.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="chapter" data-state="3" aria-labelledby="c3">
-        <div class="panel">
-          <p class="tag">[ 03 / 05 · Store ]</p>
-          <h2 id="c3">Columns, <em>not rows.</em></h2>
-          <p>The stream lands in columnar storage so a question over billions of rows comes back in under a second.</p>
-          <article class="work">
-            <h3>Analytics at volume <span>2023 – now</span></h3>
-            <p>ClickHouse clusters for high-velocity transaction data, fed in real time by Azure Functions and Event Hubs.</p>
-          </article>
-          <article class="work">
-            <h3>Hybrid storage and clusters <span>2023 – now</span></h3>
-            <p>Ceph and MinIO backends and Kubernetes across cloud and on-prem, including GPU nodes for ML workloads.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="chapter" data-state="4" aria-labelledby="c4">
-        <div class="panel">
-          <p class="tag">[ 04 / 05 · Serve ]</p>
-          <h2 id="c4">Out to everyone <em>who needs it.</em></h2>
-          <p>Data is only useful once people can reach it. These are the platforms that hand it out.</p>
-          <article class="work">
-            <h3>IUDX Data Sandbox <span>2022 – 2025</span></h3>
-            <p>Jupyter notebooks next to the exchange's datasets. A Go API with Keycloak auth, build progress streamed over Server-Sent Events, JupyterHub and BinderHub on Kubernetes. 70 of 93 backend commits.</p>
-          </article>
-          <article class="work">
-            <h3>Data marketplace file service <span>2025</span></h3>
-            <p>S3 and MinIO multipart uploads, short-lived presigned URLs, policy checks, and in-browser Parquet previews through DuckDB.</p>
-          </article>
-          <article class="work">
-            <h3>Multi-kernel notebook images <span>2026</span></h3>
-            <p>Python, R, Julia and Scala in one Jupyter image. CPU image cut from 16.1 GB to 8.1 GB, GPU image from 38.9 GB to 26.5 GB.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="chapter" data-state="5" aria-labelledby="c5">
-        <div class="panel">
-          <p class="tag">[ 05 / 05 · Learn ]</p>
-          <h2 id="c5">And sometimes, <em>research.</em></h2>
-          <p>Segmenting land use from satellite imagery at CDPG, and long-video memory and low-resource language models at IISc.</p>
-          <article class="work">
-            <h3>Learning What to Remember <span>2026 · IISc</span></h3>
-            <p>Which frames should a vision-language model keep from a long video before it knows the question? I reproduced the SimpleStream baseline, then reported honestly that the learned memory did not beat it.</p>
-          </article>
-          <article class="work">
-            <h3>GPT-2 on Mizo <span>2026 · IISc</span></h3>
-            <p>Fine-tuned GPT-2 on a low-resource language. Test perplexity fell from 680 to 22.5.</p>
-          </article>
-        </div>
-      </section>
+<main id="top">
+  <!-- The dive: hero screen plus one screen per layer. Scroll drives the camera. -->
+  <section class="dive" id="dive">
+    <div class="hero step" data-step="0">
+      <p class="eyebrow mono">Swarup E · Lead Engineer, Centre of Data for Public Good, Bengaluru</p>
+      <h1 class="hero__title">
+        <span class="line">Your request to swarup.me</span>
+        <span class="line">took <em id="total-ms" class="hot">a few ms</em>.</span>
+        <span class="line dim">Here is every hop.</span>
+      </h1>
+      <dl class="phases mono" id="phases">
+        <div class="phase"><dt>dns</dt><dd data-phase="dns">...</dd></div>
+        <div class="phase"><dt>tcp</dt><dd data-phase="tcp">...</dd></div>
+        <div class="phase"><dt>tls</dt><dd data-phase="tls">...</dd></div>
+        <div class="phase"><dt>ttfb</dt><dd data-phase="ttfb">...</dd></div>
+        <div class="phase"><dt>download</dt><dd data-phase="download">...</dd></div>
+        <div class="phase"><dt>render</dt><dd data-phase="render">...</dd></div>
+      </dl>
+      <p class="hero__note mono" id="timing-note">Measured by your browser's Navigation Timing API, for this visit only.</p>
+      <p class="hero__hint mono"><span class="hint-line"></span>scroll to follow the packet</p>
     </div>
 
-    <section class="plain" id="experience" aria-labelledby="exp-h">
-      <p class="tag">[ Experience ]</p>
-      <h2 id="exp-h">Where I've <em>worked.</em></h2>
-      <ol class="rows">
-        <li>
-          <span class="rows__when">2023 – now</span>
-          <div>
-            <h3>Lead Engineer · Centre of Data for Public Good</h3>
-            <p>Lead a cross-functional team on the core data platform. Kubernetes across cloud and on-prem, ClickHouse at scale, Ceph and MinIO, real-time pipelines on Azure. Architecture reviews and mentoring.</p>
-          </div>
-        </li>
-        <li>
-          <span class="rows__when">2022 – 2023</span>
-          <div>
-            <h3>Senior Software Engineer · CDPG</h3>
-            <p>Backend services in Go, Python and Node.js for analytics workloads, and Flink streaming jobs.</p>
-          </div>
-        </li>
-        <li>
-          <span class="rows__when">2020 – 2022</span>
-          <div>
-            <h3>Software Engineer · CDPG</h3>
-            <p>India Urban Data Exchange: the video server, the data sandbox and the adaptor framework.</p>
-          </div>
-        </li>
-        <li>
-          <span class="rows__when">2019 – 2020</span>
-          <div>
-            <h3>Member of Technical Staff · EpikInDiFi</h3>
-            <p>Moved a lending platform's listings to GraphQL (32% faster), built async vendor integrations over RabbitMQ and Socket.IO, and a 96%-accurate KYC OCR with Tesseract and Detectron2.</p>
-          </div>
-        </li>
-        <li>
-          <span class="rows__when">2019</span>
-          <div>
-            <h3>Software Developer Intern · Latitude Fintech</h3>
-            <p>A Chrome extension that records clicks and turns them into guided product tours.</p>
-          </div>
-        </li>
-        <li>
-          <span class="rows__when">2025 – now</span>
-          <div>
-            <h3>M.Tech (Online), Data Science and Business Analytics · IISc</h3>
-            <p>Alongside full-time work.</p>
-          </div>
-        </li>
-      </ol>
-    </section>
-
-    <section class="plain" id="papers" aria-labelledby="pap-h">
-      <p class="tag">[ Papers ]</p>
-      <h2 id="pap-h">Published <em>with my team.</em></h2>
-      <ol class="pubs">
-        <li><a href="https://doi.org/10.1109/InGARSS61818.2024.10984371">An Atmospheric Correction Integrated LULC Segmentation Model for High-Resolution Satellite Imagery</a><span>IEEE InGARSS 2024 · S. Mukherjee et al.</span></li>
-        <li><a href="https://arxiv.org/abs/2408.02382">Cross Pseudo Supervision Framework for Sparsely Labelled Geospatial Images</a><span>arXiv 2024 · Y. Dixit, N. Srivastava, J. D. Joy, R. Olikara, Swarup E, R. Ramesh</span></li>
-        <li><a href="https://arxiv.org/abs/2411.11291">Performance Evaluation of Geospatial Images based on Zarr and Tiff</a><span>arXiv 2024 · J. Khan, Swarup E, R. Ramesh</span></li>
-        <li><a href="https://arxiv.org/abs/2507.18099">Comparison of Segmentation Methods in Remote Sensing for Land Use Land Cover</a><span>arXiv 2025 · N. Srivastava, J. D. Joy, Y. Dixit, Swarup E, R. Ramesh</span></li>
-      </ol>
-      <p><a class="more" href="https://scholar.google.com/citations?user=Yp5J5mEAAAAJ">Google Scholar &rarr;</a></p>
-    </section>
-
-    <section class="plain" id="workshop" aria-labelledby="ws-h">
-      <p class="tag">[ Workshop · private for now ]</p>
-      <h2 id="ws-h">Things I build <em>after hours.</em></h2>
-      <div class="grid3">
-        <article><h3>GuideMesh</h3><p>Record a browser workflow, get a product walkthrough that survives code changes. 37 of 38 steps still found their element 50 commits later.</p></article>
-        <article><h3>videopipe</h3><p>Videos written as code: HTML and GSAP scenes rendered in headless Chrome, with a cloned voice and generated music.</p></article>
-        <article><h3>agent-skills</h3><p>30 skills for Claude Code and Codex, installed by group: design, debugging, evaluation, writing and media.</p></article>
+    <article class="step layer" data-step="1">
+      <div class="card">
+        <p class="card__idx mono">span 01 / 08 <span class="tag">edge</span></p>
+        <h2>Edge</h2>
+        <p>Your packet lands here first. He built the IUDX Video Server, which proxies live camera feeds from city servers behind NAT to the cloud, with load balancing and an API.</p>
+        <p class="card__real mono">your dns + tcp + tls: <b id="edge-ms">...</b></p>
       </div>
-    </section>
+    </article>
 
-    <section class="plain" id="stack" aria-labelledby="stack-h">
-      <p class="tag">[ Stack ]</p>
-      <h2 id="stack-h" class="sr-only">Stack</h2>
-      <dl class="stack">
-        <div><dt>Languages</dt><dd>Go, Java, TypeScript, Python, SQL</dd></div>
-        <div><dt>Backend</dt><dd>Express, FastAPI, Vert.x, GraphQL, Keycloak</dd></div>
-        <div><dt>Platform</dt><dd>Kubernetes, Docker, Ceph, MinIO, AWS, Azure, JupyterHub, Prometheus, Grafana</dd></div>
-        <div><dt>Streaming &amp; data</dt><dd>Apache Flink, Kafka, RabbitMQ, Event Hubs, ClickHouse, DuckDB, PostgreSQL, MongoDB, Redis</dd></div>
-        <div><dt>Front end</dt><dd>Angular, React, Next.js, ECharts</dd></div>
-      </dl>
-    </section>
+    <article class="step layer" data-step="2">
+      <div class="card">
+        <p class="card__idx mono">span 02 / 08 <span class="tag">auth</span></p>
+        <h2>Auth</h2>
+        <p>Keycloak JWT auth on the Data Sandbox Go API. Keycloak plus policy checks on the data marketplace file service.</p>
+        <ul class="chips mono"><li>Keycloak</li><li>JWT</li><li>policy checks</li></ul>
+      </div>
+    </article>
 
-    <section class="plain contact" id="contact" aria-labelledby="contact-h">
-      <p class="tag">[ Contact ]</p>
-      <h2 id="contact-h"><a href="mailto:enamakalswarup@gmail.com">enamakalswarup<wbr>@gmail.com</a></h2>
-      <ul class="links">
-        <li><a href="https://github.com/swarupe">GitHub</a></li>
-        <li><a href="https://www.linkedin.com/in/swarupe">LinkedIn</a></li>
-        <li><a href="https://www.instagram.com/swarupe7">Instagram</a></li>
-        <li><a href="https://x.com/swarup_e">X</a></li>
-        <li><a href="https://scholar.google.com/citations?user=Yp5J5mEAAAAJ">Scholar</a></li>
-      </ul>
-    </section>
-  </main>
+    <article class="step layer" data-step="3">
+      <div class="card">
+        <p class="card__idx mono">span 03 / 08 <span class="tag">api</span></p>
+        <h2>API</h2>
+        <p>A Go API that streams notebook build progress over Server-Sent Events. A TypeScript and Express file service. Listings moved to GraphQL, 32% faster.</p>
+        <ul class="chips mono"><li>Go</li><li>Node / Express</li><li>GraphQL</li><li>Vert.x</li><li>FastAPI</li></ul>
+      </div>
+    </article>
 
-  <aside class="hud" aria-hidden="true">
-    <span>sim</span>
-    <span>events/s <b data-hud="rate">0</b></span>
-    <span>watermark <b data-hud="wm">--:--:--</b></span>
-    <span>late <b data-hud="late">0.0%</b></span>
-  </aside>
+    <article class="step layer" data-step="4">
+      <div class="card">
+        <p class="card__idx mono">span 04 / 08 <span class="tag">queue</span></p>
+        <h2>Queue</h2>
+        <p>Async vendor integrations over RabbitMQ and Socket.IO. RabbitMQ and PostgreSQL sinks for the ingest pipeline. A Redis job queue behind file uploads.</p>
+        <ul class="chips mono"><li>RabbitMQ</li><li>Redis</li><li>Socket.IO</li></ul>
+      </div>
+    </article>
 
-  <footer class="foot">
-    <p>Bengaluru · 12.97°N 77.59°E · hand-written HTML on GitHub Pages, no trackers.</p>
-  </footer>
+    <article class="step layer" data-step="5">
+      <div class="card">
+        <p class="card__idx mono">span 05 / 08 <span class="tag">stream</span></p>
+        <h2>Stream</h2>
+        <p>The IUDX Adaptor Framework: ingest on Apache Flink, a Calcite SQL rules engine over RocksDB state. Top contributor, 178 of 435 commits.</p>
+        <ul class="chips mono"><li>Flink</li><li>Kafka</li><li>Event Hubs</li><li>Calcite</li></ul>
+      </div>
+    </article>
+
+    <article class="step layer" data-step="6">
+      <div class="card">
+        <p class="card__idx mono">span 06 / 08 <span class="tag">storage</span></p>
+        <h2>Storage</h2>
+        <p>ClickHouse clusters holding billions of rows with sub-second queries. Ceph and MinIO across cloud and on-prem.</p>
+        <ul class="chips mono"><li>ClickHouse</li><li>Ceph</li><li>MinIO</li><li>DuckDB</li><li>PostgreSQL</li></ul>
+      </div>
+    </article>
+
+    <article class="step layer" data-step="7">
+      <div class="card">
+        <p class="card__idx mono">span 07 / 08 <span class="tag">cluster</span></p>
+        <h2>Cluster</h2>
+        <p>Kubernetes across cloud and on-prem, with GPU nodes. JupyterHub and BinderHub for notebooks next to datasets. Notebook images cut from 16.1 GB to 8.1 GB.</p>
+        <ul class="chips mono"><li>Kubernetes</li><li>JupyterHub</li><li>Prometheus</li><li>Grafana</li></ul>
+      </div>
+    </article>
+
+    <article class="step layer" data-step="8">
+      <div class="card">
+        <p class="card__idx mono">span 08 / 08 <span class="tag">browser</span></p>
+        <h2>Browser</h2>
+        <p>Back to you. Angular and React front ends, in-browser Parquet previews through DuckDB, and a Chrome extension that records clicks into guided product tours.</p>
+        <p class="card__real mono">your parse + render: <b id="browser-ms">...</b></p>
+      </div>
+    </article>
+  </section>
+
+  <!-- Trace view -->
+  <section class="trace" id="trace">
+    <div class="trace__intro">
+      <p class="eyebrow mono">trace view</p>
+      <h2 class="section-title">Same request, as spans.</h2>
+      <p class="lede">The top span is your visit, timed by your browser. Below it, each layer he builds becomes a span on a different clock: years, 2019 to now. Open a span to see its child services.</p>
+    </div>
+
+    <div class="panel" id="panel">
+      <div class="panel__head mono">
+        <div><span class="k">trace</span> <span id="trace-id-2">0000000000000000</span></div>
+        <div><span class="k">root</span> GET swarup.me/</div>
+        <div><span class="k">proto</span> <span id="proto">unknown</span></div>
+        <div><span class="k">duration</span> <span id="total-ms-2" class="hot">...</span></div>
+      </div>
+
+      <!-- Part A: the real request, in milliseconds -->
+      <div class="wf wf--req" id="wf-req" role="list" aria-label="Your request, by phase">
+        <div class="axis mono" aria-hidden="true"><span></span><span class="axis__ticks"><span>0 ms</span><span id="axis-mid">...</span><span id="axis-end">...</span></span><span></span></div>
+        <!-- rows filled by timing.js; static fallbacks below -->
+        <div class="row row--req" role="listitem" data-req="dns"><span class="row__name mono">dns.lookup</span><span class="row__track"><span class="bar"></span></span><span class="row__dur mono">...</span></div>
+        <div class="row row--req" role="listitem" data-req="tcp"><span class="row__name mono">tcp.connect</span><span class="row__track"><span class="bar"></span></span><span class="row__dur mono">...</span></div>
+        <div class="row row--req" role="listitem" data-req="tls"><span class="row__name mono">tls.handshake</span><span class="row__track"><span class="bar"></span></span><span class="row__dur mono">...</span></div>
+        <div class="row row--req" role="listitem" data-req="ttfb"><span class="row__name mono">http.wait (ttfb)</span><span class="row__track"><span class="bar"></span></span><span class="row__dur mono">...</span></div>
+        <div class="row row--req" role="listitem" data-req="download"><span class="row__name mono">http.download</span><span class="row__track"><span class="bar"></span></span><span class="row__dur mono">...</span></div>
+        <div class="row row--req" role="listitem" data-req="render"><span class="row__name mono">browser.render</span><span class="row__track"><span class="bar"></span></span><span class="row__dur mono">...</span></div>
+      </div>
+
+      <div class="clockswitch mono"><span>clock changes</span><b>ms</b><i></i><b class="hot">years</b></div>
+
+      <!-- Part B: the layers he builds, on a years axis -->
+      <div class="wf wf--years" id="wf-years">
+        <div class="axis axis--years mono" aria-hidden="true"><span></span><span class="axis__ticks"><span>2019</span><span>2020</span><span>2021</span><span>2022</span><span>2023</span><span>2024</span><span>2025</span><span>2026</span></span><span></span></div>
+
+        <div class="group" data-layer="edge">
+          <button class="row row--layer" aria-expanded="false">
+            <span class="row__name"><i class="caret"></i><b>edge</b><span class="svc mono">ingress, uploads</span></span>
+            <span class="row__track"><span class="bar" style="--s:2021;--e:2026"></span></span>
+            <span class="row__dur mono">2021 to 2025</span>
+          </button>
+          <div class="kids"><div class="kids__in">
+            <div class="row row--kid"><span class="row__name mono">iudx.video-server</span><span class="row__track"><span class="bar" style="--s:2021;--e:2022"></span></span><span class="row__dur mono">2021</span>
+              <p class="row__desc">Proxies live camera feeds from city servers behind NAT to the cloud, with load balancing and an API.</p></div>
+            <div class="row row--kid"><span class="row__name mono">marketplace.uploads</span><span class="row__track"><span class="bar" style="--s:2025;--e:2026"></span></span><span class="row__dur mono">2025</span>
+              <p class="row__desc">S3 and MinIO multipart uploads with presigned URLs.</p></div>
+          </div></div>
+        </div>
+
+        <div class="group" data-layer="auth">
+          <button class="row row--layer" aria-expanded="false">
+            <span class="row__name"><i class="caret"></i><b>auth</b><span class="svc mono">keycloak</span></span>
+            <span class="row__track"><span class="bar" style="--s:2022;--e:2026"></span></span>
+            <span class="row__dur mono">2022 to 2025</span>
+          </button>
+          <div class="kids"><div class="kids__in">
+            <div class="row row--kid"><span class="row__name mono">sandbox.jwt</span><span class="row__track"><span class="bar" style="--s:2022;--e:2026"></span></span><span class="row__dur mono">2022 to 2025</span>
+              <p class="row__desc">Keycloak JWT auth on the IUDX Data Sandbox Go API.</p></div>
+            <div class="row row--kid"><span class="row__name mono">marketplace.policy</span><span class="row__track"><span class="bar" style="--s:2025;--e:2026"></span></span><span class="row__dur mono">2025</span>
+              <p class="row__desc">Keycloak and policy checks on the data marketplace file service.</p></div>
+          </div></div>
+        </div>
+
+        <div class="group" data-layer="api">
+          <button class="row row--layer" aria-expanded="false">
+            <span class="row__name"><i class="caret"></i><b>api</b><span class="svc mono">go, node, graphql</span></span>
+            <span class="row__track"><span class="bar" style="--s:2019.5;--e:2026"></span></span>
+            <span class="row__dur mono">2019 to 2025</span>
+          </button>
+          <div class="kids"><div class="kids__in">
+            <div class="row row--kid"><span class="row__name mono">epikindifi.listings</span><span class="row__track"><span class="bar" style="--s:2019.5;--e:2021"></span></span><span class="row__dur mono">2019 to 2020</span>
+              <p class="row__desc">Listings moved to GraphQL, 32% faster. MongoDB text search.</p><p class="row__tags mono"><span>graphql</span><span>mongodb</span><span>32% faster</span></p></div>
+            <div class="row row--kid"><span class="row__name mono">epikindifi.kyc-ocr</span><span class="row__track"><span class="bar" style="--s:2019.5;--e:2021"></span></span><span class="row__dur mono">2019 to 2020</span>
+              <p class="row__desc">KYC OCR with Tesseract and Detectron2 at 96% accuracy.</p></div>
+            <div class="row row--kid"><span class="row__name mono">sandbox.api</span><span class="row__track"><span class="bar" style="--s:2022;--e:2026"></span></span><span class="row__dur mono">2022 to 2025</span>
+              <p class="row__desc">Go API with build progress over Server-Sent Events.</p><p class="row__tags mono"><span>go</span><span>sse</span><span>70 of 93 commits</span></p></div>
+            <div class="row row--kid"><span class="row__name mono">marketplace.files</span><span class="row__track"><span class="bar" style="--s:2025;--e:2026"></span></span><span class="row__dur mono">2025</span>
+              <p class="row__desc">TypeScript and Express file service.</p><p class="row__tags mono"><span>typescript</span><span>express</span><span>85 of 105 commits</span></p></div>
+          </div></div>
+        </div>
+
+        <div class="group" data-layer="queue">
+          <button class="row row--layer" aria-expanded="false">
+            <span class="row__name"><i class="caret"></i><b>queue</b><span class="svc mono">rabbitmq, redis</span></span>
+            <span class="row__track"><span class="bar" style="--s:2019.5;--e:2026"></span></span>
+            <span class="row__dur mono">2019 to 2025</span>
+          </button>
+          <div class="kids"><div class="kids__in">
+            <div class="row row--kid"><span class="row__name mono">epikindifi.vendors</span><span class="row__track"><span class="bar" style="--s:2019.5;--e:2021"></span></span><span class="row__dur mono">2019 to 2020</span>
+              <p class="row__desc">Async vendor integrations over RabbitMQ and Socket.IO.</p></div>
+            <div class="row row--kid"><span class="row__name mono">adaptor.sinks</span><span class="row__track"><span class="bar" style="--s:2021;--e:2024"></span></span><span class="row__dur mono">2021 to 2023</span>
+              <p class="row__desc">RabbitMQ and PostgreSQL sinks for the ingest pipeline.</p></div>
+            <div class="row row--kid"><span class="row__name mono">marketplace.jobs</span><span class="row__track"><span class="bar" style="--s:2025;--e:2026"></span></span><span class="row__dur mono">2025</span>
+              <p class="row__desc">Redis job queue behind the file service.</p></div>
+          </div></div>
+        </div>
+
+        <div class="group" data-layer="stream">
+          <button class="row row--layer" aria-expanded="false">
+            <span class="row__name"><i class="caret"></i><b>stream</b><span class="svc mono">flink, event hubs</span></span>
+            <span class="row__track"><span class="bar" style="--s:2021;--e:2026.8"></span></span>
+            <span class="row__dur mono">2021 to now</span>
+          </button>
+          <div class="kids"><div class="kids__in">
+            <div class="row row--kid"><span class="row__name mono">iudx.adaptor</span><span class="row__track"><span class="bar" style="--s:2021;--e:2024"></span></span><span class="row__dur mono">2021 to 2023</span>
+              <p class="row__desc">Ingest pipeline on Apache Flink. Calcite SQL rules engine over RocksDB state.</p><p class="row__tags mono"><span>flink</span><span>calcite</span><span>rocksdb</span><span>178 of 435 commits</span></p></div>
+            <div class="row row--kid"><span class="row__name mono">adaptor.transforms</span><span class="row__track"><span class="bar" style="--s:2021;--e:2024"></span></span><span class="row__dur mono">2021 to 2023</span>
+              <p class="row__desc">Benchmarked JS engines and moved transforms from Rhino to Nashorn.</p></div>
+            <div class="row row--kid"><span class="row__name mono">analytics.ingest</span><span class="row__track"><span class="bar" style="--s:2023;--e:2026.8"></span></span><span class="row__dur mono">2023 to now</span>
+              <p class="row__desc">Azure Functions and Event Hubs feeding ClickHouse.</p></div>
+          </div></div>
+        </div>
+
+        <div class="group" data-layer="storage">
+          <button class="row row--layer" aria-expanded="false">
+            <span class="row__name"><i class="caret"></i><b>storage</b><span class="svc mono">clickhouse, ceph, minio</span></span>
+            <span class="row__track"><span class="bar" style="--s:2019.5;--e:2026.8"></span></span>
+            <span class="row__dur mono">2019 to now</span>
+          </button>
+          <div class="kids"><div class="kids__in">
+            <div class="row row--kid"><span class="row__name mono">analytics.clickhouse</span><span class="row__track"><span class="bar" style="--s:2023;--e:2026.8"></span></span><span class="row__dur mono">2023 to now</span>
+              <p class="row__desc">ClickHouse clusters holding billions of rows, with sub-second queries.</p></div>
+            <div class="row row--kid"><span class="row__name mono">hybrid.objects</span><span class="row__track"><span class="bar" style="--s:2023;--e:2026.8"></span></span><span class="row__dur mono">2023 to now</span>
+              <p class="row__desc">Ceph and MinIO across cloud and on-prem.</p></div>
+            <div class="row row--kid"><span class="row__name mono">epikindifi.search</span><span class="row__track"><span class="bar" style="--s:2019.5;--e:2021"></span></span><span class="row__dur mono">2019 to 2020</span>
+              <p class="row__desc">MongoDB text search over listings.</p></div>
+          </div></div>
+        </div>
+
+        <div class="group" data-layer="cluster">
+          <button class="row row--layer" aria-expanded="false">
+            <span class="row__name"><i class="caret"></i><b>cluster</b><span class="svc mono">kubernetes, jupyterhub</span></span>
+            <span class="row__track"><span class="bar" style="--s:2021;--e:2026.8"></span></span>
+            <span class="row__dur mono">2021 to now</span>
+          </button>
+          <div class="kids"><div class="kids__in">
+            <div class="row row--kid"><span class="row__name mono">adaptor.observability</span><span class="row__track"><span class="bar" style="--s:2021;--e:2024"></span></span><span class="row__dur mono">2021 to 2023</span>
+              <p class="row__desc">Prometheus, Grafana and Loki on Kubernetes.</p></div>
+            <div class="row row--kid"><span class="row__name mono">sandbox.jupyterhub</span><span class="row__track"><span class="bar" style="--s:2022;--e:2026"></span></span><span class="row__dur mono">2022 to 2025</span>
+              <p class="row__desc">JupyterHub and BinderHub on Kubernetes, so notebooks run next to datasets.</p></div>
+            <div class="row row--kid"><span class="row__name mono">hybrid.k8s</span><span class="row__track"><span class="bar" style="--s:2023;--e:2026.8"></span></span><span class="row__dur mono">2023 to now</span>
+              <p class="row__desc">Kubernetes across cloud and on-prem, with GPU nodes.</p></div>
+            <div class="row row--kid"><span class="row__name mono">notebook.images</span><span class="row__track"><span class="bar" style="--s:2026;--e:2026.8"></span></span><span class="row__dur mono">2026</span>
+              <p class="row__desc">Multi-kernel images for Python, R, Julia and Scala.</p><p class="row__tags mono"><span>cpu 16.1 GB to 8.1 GB</span><span>gpu 38.9 GB to 26.5 GB</span></p></div>
+          </div></div>
+        </div>
+
+        <div class="group" data-layer="browser">
+          <button class="row row--layer" aria-expanded="false">
+            <span class="row__name"><i class="caret"></i><b>browser</b><span class="svc mono">angular, react</span></span>
+            <span class="row__track"><span class="bar" style="--s:2019.1;--e:2026"></span></span>
+            <span class="row__dur mono">2019 to 2025</span>
+          </button>
+          <div class="kids"><div class="kids__in">
+            <div class="row row--kid"><span class="row__name mono">latitude.tours</span><span class="row__track"><span class="bar" style="--s:2019.1;--e:2019.5"></span></span><span class="row__dur mono">2019</span>
+              <p class="row__desc">Chrome extension that records clicks into guided product tours.</p></div>
+            <div class="row row--kid"><span class="row__name mono">marketplace.preview</span><span class="row__track"><span class="bar" style="--s:2025;--e:2026"></span></span><span class="row__dur mono">2025</span>
+              <p class="row__desc">In-browser Parquet previews through DuckDB.</p></div>
+            <div class="row row--kid row--undated"><span class="row__name mono">guidemesh</span><span class="row__track"><span class="undated mono">private side project</span></span><span class="row__dur mono">private</span>
+              <p class="row__desc">Record a browser workflow, get a walkthrough that survives code changes. 37 of 38 steps found 50 commits later.</p></div>
+            <div class="row row--kid row--undated"><span class="row__name mono">videopipe</span><span class="row__track"><span class="undated mono">private side project</span></span><span class="row__dur mono">private</span>
+              <p class="row__desc">Videos written as code: HTML and GSAP scenes rendered in headless Chrome.</p></div>
+          </div></div>
+        </div>
+
+        <div class="group group--oob" data-layer="research">
+          <button class="row row--layer" aria-expanded="false">
+            <span class="row__name"><i class="caret"></i><b>research</b><span class="svc mono">out of band</span></span>
+            <span class="row__track"><span class="bar" style="--s:2024;--e:2026.8"></span></span>
+            <span class="row__dur mono">2024 to now</span>
+          </button>
+          <div class="kids"><div class="kids__in">
+            <div class="row row--kid"><span class="row__name mono">lulc.segmentation</span><span class="row__track"><span class="bar" style="--s:2024;--e:2026"></span></span><span class="row__dur mono">2024 to 2025</span>
+              <p class="row__desc">4 papers on land use and land cover segmentation from satellite imagery: IEEE InGARSS 2024, two on arXiv in 2024, one on arXiv in 2025.</p></div>
+            <div class="row row--kid"><span class="row__name mono">iisc.mtech</span><span class="row__track"><span class="bar" style="--s:2025.6;--e:2026.8"></span></span><span class="row__dur mono">2025 to now</span>
+              <p class="row__desc">Online M.Tech, Data Science and Business Analytics. "Learning What to Remember": learned memory did not beat the recent-frames baseline, and the report says so. GPT-2 fine-tuned on Mizo, test perplexity 680 to 22.5.</p></div>
+            <div class="row row--kid row--undated"><span class="row__name mono">agent-skills</span><span class="row__track"><span class="undated mono">private side project</span></span><span class="row__dur mono">private</span>
+              <p class="row__desc">30 skills for Claude Code and Codex.</p></div>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="panel__foot mono">
+        <span>9 spans, 28 child spans</span>
+        <button class="linkbtn" id="toggle-all" type="button">expand all</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <p class="eyebrow mono">span closed · status 200</p>
+    <h2 class="section-title">Send the next request.</h2>
+    <ul class="contact__list">
+      <li><a href="mailto:enamakalswarup@gmail.com"><span class="mono k">mail</span>enamakalswarup@gmail.com</a></li>
+      <li><a href="https://github.com/swarupe"><span class="mono k">code</span>github.com/swarupe</a></li>
+      <li><a href="https://linkedin.com/in/swarupe"><span class="mono k">work</span>linkedin.com/in/swarupe</a></li>
+    </ul>
+    <p class="contact__foot mono">Engineer since 2019. Lead Engineer at CDPG since April 2023.</p>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script type="module" src="main.js"></script>
 </body>
 </html>
