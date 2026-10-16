@@ -46,10 +46,40 @@ function watchRun() {
 
 mountRuntime({ still: reduced });
 watchRun();
-const ready = boot();
+
+// The scene starts when the intro presses Enter, or right away without the intro.
+let startScene;
+const ready = new Promise((r) => { startScene = r; }).then(boot);
+
+function handOff() {
+  root.classList.remove('loading');
+  document.getElementById('loader')?.remove();
+  window.ScrollTrigger?.refresh();
+}
+
 if (root.classList.contains('loading')) {
   window.__loaderStarted = true;
-  runLoader({ ready, deadBytes: dead.bytes });
+  let seen = false;
+  try { seen = sessionStorage.getItem('swc-booted') === '1'; } catch {}
+  const htmlLoader = () => { startScene(); return runLoader({ ready, deadBytes: dead.bytes }); };
+  if (!seen && webglOK()) {
+    // First visit: the 3D workstation. Later visits in the session get the quick terminal.
+    try { sessionStorage.setItem('swc-booted', '1'); } catch {}
+    document.getElementById('loader').classList.add('intro-wait');
+    history.scrollRestoration = 'manual';
+    scrollTo(0, 0);
+    import('./intro.js')
+      .then(({ runIntro }) => runIntro({ ready, startScene, deadBytes: dead.bytes, onHandoff: handOff }))
+      .catch((err) => {
+        console.warn('3D intro unavailable, using the terminal loader.', err);
+        document.querySelector('.intro')?.remove();
+        document.getElementById('loader')?.classList.remove('intro-wait');
+        htmlLoader();
+      });
+  } else {
+    htmlLoader();
+  }
 } else {
   document.getElementById('loader').remove();
+  startScene();
 }

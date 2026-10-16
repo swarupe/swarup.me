@@ -879,10 +879,13 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
   ScrollTrigger.refresh();
 
   if (location.search.includes('debug')) window.__dbg = { bloom, scene, tokenSet, gyro, tiles, libSet, beams, renderer, composer, dustMat };
-  let p = 0, last = performance.now(), t = 0;
+  let p = 0, last = performance.now(), t = 0, warmed = false;
   function frame(now) {
     const dt = Math.min(0.1, (now - last) / 1000);
     last = now; t += dt;
+    // While the intro covers the page, render once to compile shaders, then wait.
+    if (html.classList.contains('loading') && window.__frames > 0 && warmed) { requestAnimationFrame(frame); return; }
+    warmed = true;
     const target = prog.reduce((a, b) => a + b, 0);
     p = window.__snap ? target : p + (target - p) * (1 - Math.exp(-dt * 5));
     window.__p = p;

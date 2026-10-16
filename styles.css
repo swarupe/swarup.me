@@ -439,3 +439,26 @@ td.rt-area { color: var(--c); }
 /* The runtime is plain text; dim the 3D layer behind it. */
 #gl { transition: opacity .6s ease; }
 html.in-run #gl { opacity: 0.3; }
+
+/* ---------- 3D intro: the workstation ---------- */
+.loader.intro-wait .loader-term { display: none; }
+.loader.intro-wait::after {
+  content: "swc"; position: relative; font: 600 12px var(--mono); letter-spacing: .2em; color: var(--ink-3);
+  animation: blink 1.1s steps(1) infinite;
+}
+.intro { position: fixed; inset: 0; z-index: 60; background: #030305; transition: opacity .7s ease; }
+.intro canvas { display: block; width: 100%; height: 100%; }
+.intro.is-done { opacity: 0; pointer-events: none; }
+.intro-phase {
+  position: absolute; left: var(--gutter); bottom: 22px; margin: 0;
+  display: flex; align-items: center; gap: 9px; font: 600 12px var(--mono); color: var(--ink);
+}
+#intro-phase { color: var(--ink-3); font-weight: 400; }
+.intro-skip {
+  position: absolute; right: var(--gutter); bottom: 18px; font: 400 11.5px var(--mono); color: var(--ink-3);
+  background: rgba(10, 12, 19, .6); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; cursor: pointer;
+}
+.intro-phase, .intro-skip { transition: opacity .5s; }
+.intro.is-pushing .intro-phase, .intro.is-pushing .intro-skip { opacity: 0; }
+.intro-skip kbd { font: inherit; color: var(--ink-2); }
+.intro-skip:hover { color: var(--ink); border-color: rgba(184, 242, 124, .4); }
