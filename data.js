@@ -49,3 +49,63 @@ export const LIBS = [
   ['PyTorch', 'kw', ['Learning What to Remember', 'GPT-2 on Mizo']],
   ['JupyterHub', 'teal', ['JupyterHub + BinderHub']],
 ];
+
+// Commit counts on the three repos where the share is known. The loader counts up to their sum.
+export const COMMITS = [
+  ['iudx-adaptor-framework', 178, 435],
+  ['data-sandbox backend', 70, 93],
+  ['marketplace file service', 85, 105],
+];
+
+// Areas in the runtime view, in tree order, with their palette key.
+export const AREAS = [
+  ['backend', 'id'], ['devops', 'op'], ['data', 'num'], ['frontend', 'str'], ['research', 'kw'], ['side', 'teal'],
+];
+
+// htop: skills as processes, grouped by area.
+export const PROCS = [
+  ['backend', 'go', 'Go APIs: sandbox, auth, SSE'],
+  ['backend', 'java', 'Java and Vert.x services'],
+  ['backend', 'node', 'TypeScript and Express'],
+  ['backend', 'fastapi', 'Python and FastAPI'],
+  ['backend', 'keycloak', 'Keycloak auth and policy'],
+  ['devops', 'kubelet', 'Kubernetes, cloud and on-prem'],
+  ['devops', 'dockerd', 'Docker images'],
+  ['devops', 'ceph-osd', 'Ceph and MinIO storage'],
+  ['devops', 'jupyterhub', 'JupyterHub and BinderHub'],
+  ['devops', 'prometheus', 'Prometheus, Grafana, Loki'],
+  ['data', 'flink', 'Apache Flink streaming'],
+  ['data', 'rabbitmq', 'RabbitMQ, Kafka, Event Hubs'],
+  ['data', 'clickhouse', 'ClickHouse analytics'],
+  ['data', 'postgres', 'PostgreSQL, MongoDB, Redis'],
+  ['frontend', 'react', 'React and Next.js'],
+  ['frontend', 'angular', 'Angular and ECharts'],
+  ['frontend', 'duckdb-wasm', 'Parquet previews in the browser'],
+  ['research', 'segment', 'Satellite LULC segmentation'],
+  ['research', 'vlm-mem', 'Streaming memory for VLMs'],
+  ['research', 'pytorch', 'PyTorch'],
+  ['side', 'guidemesh', 'Walkthroughs that survive code changes'],
+  ['side', 'videopipe', 'Videos written as code'],
+  ['side', 'agent-skills', '30 skills for coding agents'],
+];
+
+// tail -f career.log: [when, source, kind, message].
+export const CAREER = [
+  ['2019-02', 'latitude', 'intern', 'Intern at Latitude Fintech. Built a Chrome extension that records clicks into guided product tours.'],
+  ['2019-07', 'epikindifi', 'join', 'Member of Technical Staff at EpikInDiFi.'],
+  ['2020', 'epikindifi', 'ship', 'Listings moved to GraphQL, 32% faster.'],
+  ['2020', 'epikindifi', 'ship', 'KYC OCR with Tesseract and Detectron2 at 96% accuracy.'],
+  ['2020-12', 'cdpg', 'join', 'Software Engineer, Centre of Data for Public Good.'],
+  ['2021', 'cdpg', 'ship', 'IUDX Adaptor Framework on Flink. 178 of 435 commits.'],
+  ['2021', 'cdpg', 'ship', 'IUDX Video Server: city camera feeds proxied to the cloud.'],
+  ['2022-04', 'cdpg', 'promote', 'Senior Software Engineer.'],
+  ['2022', 'cdpg', 'ship', 'IUDX Data Sandbox. 70 of 93 backend commits.'],
+  ['2023-04', 'cdpg', 'promote', 'Lead Engineer.'],
+  ['2023', 'cdpg', 'ship', 'ClickHouse analytics: billions of rows, sub-second queries.'],
+  ['2024', 'research', 'paper', 'LULC segmentation at IEEE InGARSS 2024, plus 2 arXiv papers.'],
+  ['2025-07', 'research', 'paper', 'Comparison of segmentation methods for LULC, arXiv.'],
+  ['2025-08', 'iisc', 'enrol', 'Online M.Tech, Data Science and Business Analytics, IISc.'],
+  ['2025', 'cdpg', 'ship', 'Data marketplace file service. 85 of 105 commits.'],
+  ['2026', 'cdpg', 'ship', 'Multi-kernel notebook images. CPU image 16.1 GB to 8.1 GB.'],
+  ['now', 'cdpg', 'running', 'Lead Engineer, Bengaluru.'],
+];

@@ -23,6 +23,15 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script>
+  // The loader only runs with motion allowed. If the modules never start, unlock the page anyway.
+  (function (r) {
+    r.classList.add('js');
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    r.classList.add('loading');
+    setTimeout(function () { if (!window.__loaderStarted) r.classList.remove('loading'); }, 6000);
+  })(document.documentElement);
+</script>
 <script type="module" src="main.js"></script>
 </head>
 <body>
@@ -35,9 +44,17 @@
     <li data-step="3"><a href="#optimizer"><span>03</span> opt</a></li>
     <li data-step="4"><a href="#linker"><span>04</span> link</a></li>
     <li data-step="5"><a href="#output"><span>05</span> out</a></li>
+    <li data-step="6"><a href="#run"><span>06</span> run</a></li>
   </ol>
 </header>
 
+<div class="loader" id="loader" aria-hidden="true" aria-busy="true">
+  <div class="loader-term">
+    <div class="loader-top"><span class="hud-dot"></span>swc <span class="dim">self-test</span><button class="loader-skip" type="button" tabindex="-1">skip <kbd>esc</kbd></button></div>
+    <pre class="loader-log" id="loader-log"><span class="prompt">$</span> swc swarup.src --release</pre>
+    <div class="loader-foot"><span class="loader-bar"><i id="loader-fill"></i></span><span id="loader-pct">0%</span></div>
+  </div>
+</div>
 <div class="buildlog" aria-hidden="true"><span class="buildlog-prompt">$</span> <span id="buildlog-text">swc swarup.src --release</span></div>
 <div class="labels" id="labels" aria-hidden="true"></div>
 
@@ -218,6 +235,34 @@
       <li><a href="https://arxiv.org/abs/2507.18099">Comparison of Segmentation Methods in Remote Sensing for Land Use Land Cover</a><span>arXiv 2025</span></li>
     </ol>
   </article>
+</section>
+
+<section class="run" id="run" aria-labelledby="run-title" hidden>
+  <header class="run-head">
+    <p class="panel-step t-teal">06 &middot; run <span class="dim">./swarup.bin</span></p>
+    <h2 id="run-title">Running since 2019</h2>
+  </header>
+  <div class="wm">
+    <div class="wm-bar">
+      <span class="wm-ws"><b>1</b><i>2</i><i>3</i></span>
+      <span class="wm-title">swarup.bin</span>
+      <span class="wm-right"><span class="wm-host">swarup@cdpg</span><span id="rt-clock"></span></span>
+    </div>
+    <div class="wm-tiles">
+      <article class="pane rt-p-htop">
+        <div class="pane-head"><span class="pane-cmd">htop</span><span class="pane-meta">skills as processes</span></div>
+        <div class="pane-body" id="rt-htop"></div>
+      </article>
+      <article class="pane rt-p-log">
+        <div class="pane-head"><span class="pane-cmd">tail -f ~/career.log</span><span class="pane-meta" id="rt-log-meta">following</span></div>
+        <div class="pane-body" id="rt-log"></div>
+      </article>
+      <article class="pane rt-p-sl">
+        <div class="pane-head"><span class="pane-cmd">git shortlog -sn --author=swarup</span><span class="pane-meta">my share of commits</span></div>
+        <div class="pane-body" id="rt-shortlog"></div>
+      </article>
+    </div>
+  </div>
 </section>
 
 </main>

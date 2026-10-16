@@ -1,6 +1,8 @@
 // Bootstrap. The page is readable HTML first; WebGL and scroll motion are layered on top
 // only when the browser supports them and the reader has not asked for reduced motion.
 import { SOURCE, lex, deadBytes } from './source.js';
+import { runLoader } from './loader.js';
+import { mountRuntime } from './runtime.js';
 
 window.__frames = 0;
 const root = document.documentElement;
@@ -36,4 +38,18 @@ async function boot() {
   await scene.start({ motion, deadBytes: dead.bytes, gsap, ScrollTrigger: ST });
 }
 
-boot();
+// Stage 06 sits after the 3D stages. The scene reads this flag for the HUD and the build log.
+function watchRun() {
+  new IntersectionObserver(([e]) => root.classList.toggle('in-run', e.isIntersecting),
+    { rootMargin: '0px 0px -55% 0px' }).observe(document.getElementById('run'));
+}
+
+mountRuntime({ still: reduced });
+watchRun();
+const ready = boot();
+if (root.classList.contains('loading')) {
+  window.__loaderStarted = true;
+  runLoader({ ready, deadBytes: dead.bytes });
+} else {
+  document.getElementById('loader').remove();
+}

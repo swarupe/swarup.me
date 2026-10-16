@@ -576,6 +576,7 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
     `opt      1 dead branch removed, ${deadBytes} B saved`,
     `link     ${LN} libraries resolved`,
     'ok       swarup.bin ready',
+    'run      ./swarup.bin',
   ];
   let lastStage = -1;
 
@@ -809,7 +810,8 @@ export async function start({ motion, deadBytes, gsap, ScrollTrigger }) {
 
     /* HUD + panels */
     if (bytesEl && html.classList.contains('fx')) bytesEl.textContent = String(Math.round(deadBytes * smooth(2.25, 2.8, p)));
-    const stage = Math.min(5, Math.floor(p + 0.25));
+    // 6 is the runtime section after the 3D stages; main.js flags it on <html>.
+    const stage = html.classList.contains('in-run') ? 6 : Math.min(5, Math.floor(p + 0.25));
     if (stage !== lastStage) {
       lastStage = stage;
       logEl.textContent = LOG[stage];
